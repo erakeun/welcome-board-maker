@@ -1,9 +1,0 @@
-웰컴보드 배경
-
-권장:
-welcome_brown.png
-welcome_black.png
-
-기존 이름도 지원:
-template_13.png
-template_14.png
