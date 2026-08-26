@@ -11,7 +11,7 @@ href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variabl
 href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -93,13 +93,19 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 }
 .built-logo-box .row{align-items:end}
 .built-logo-box .hint{font-size:10.5px;color:#657584;line-height:1.45;margin-top:6px}
-.logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.logo-grid{display:grid;grid-template-columns:1fr;gap:7px}
 .logo-slot{
   border:1px solid var(--line);border-radius:9px;background:#f8fafb;padding:8px
 }
 .logo-slot.active{outline:2px solid var(--blue);outline-offset:-2px;background:#f2f7fb}
 .logo-slot strong{font-size:11px;display:block;margin-bottom:5px}
 .logo-slot input{font-size:10px;padding:6px}
+.logo-slot{
+  display:grid;grid-template-columns:96px minmax(0,1fr) 132px;gap:7px;align-items:center
+}
+.logo-slot strong{margin:0}
+.logo-slot input{min-width:0}
+.logo-slot .slot-actions{margin:0}
 .slot-actions{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:5px}
 .slot-actions button{padding:5px 3px;font-size:9.5px}
 .btns{display:grid;grid-template-columns:1fr 1fr;gap:7px}
@@ -206,6 +212,8 @@ input[type=range]{width:100%;accent-color:var(--blue)}
   .app{display:block}.sidebar{height:auto;position:relative}
   .workspace{height:auto;min-height:80vh}.toolbar{position:sticky;top:0}
   .stage{min-height:70vh}
+  .logo-slot{grid-template-columns:1fr}
+  .logo-slot .slot-actions{margin-top:4px}
 }
 </style>
 </head>
@@ -213,10 +221,10 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="head"><h1>웰컴보드 제작기</h1><span class="version">V1.0.1</span></div>
+  <div class="head"><h1>웰컴보드 제작기</h1><span class="version">V1.0.3</span></div>
   <p class="desc">
     ERICA 본관 1층 16:9 스크린용 웰컴보드 전용 제작기.
-    행사명·일시·장소와 기관 로고를 배치하고 고해상도 이미지로 저장해. 한양대 흰색 로고는 기본 에셋에서 바로 선택할 수 있어.
+    행사명·일시·장소와 기관 로고를 배치하고 고해상도 이미지로 저장해. 한양대 흰색 로고는 기본 에셋에서 바로 선택할 수 있고, 상업적 이용 가능한 무료 글꼴만 제공해.
   </p>
 
   <section class="section">
@@ -259,6 +267,20 @@ input[type=range]{width:100%;accent-color:var(--blue)}
     <div class="actions">
       <button type="button" id="exampleBtn">예시 다시 불러오기</button>
       <button type="button" id="clearTextBtn">문구 비우기</button>
+    </div>
+
+    <div class="field" style="margin-top:12px">
+      <label><strong>글꼴</strong><span>상업적 이용 가능한 무료 폰트만</span></label>
+      <select id="fontSelect">
+        <option value="Pretendard">Pretendard</option>
+        <option value="SUIT">SUIT</option>
+        <option value="Noto Sans KR">Noto Sans KR</option>
+        <option value="Noto Serif KR">Noto Serif KR</option>
+      </select>
+      <div class="note" style="margin-top:6px">
+        네 폰트 모두 SIL Open Font License 계열로 배포되는 무료 글꼴이라,
+        웰컴보드·홍보물 등 상업적 결과물에도 사용할 수 있어.
+      </div>
     </div>
 
     <div style="margin-top:12px">
@@ -360,13 +382,17 @@ input[type=range]{width:100%;accent-color:var(--blue)}
     <div class="field">
       <label><strong>PNG 출력 화질</strong></label>
       <select id="resolution">
-        <option value="1920">Full HD · 1920×1080</option>
-        <option value="3840" selected>4K · 3840×2160 권장</option>
-        <option value="7680">8K · 7680×4320 초고화질</option>
+        <option value="3840">4K · 3840×2160 · 고화질</option>
+        <option value="5760">6K · 5760×3240 · 초고화질</option>
+        <option value="7680" selected>8K · 7680×4320 · 최고화질 권장</option>
       </select>
       <div class="note" style="margin-top:6px">
-        기본값을 4K로 올렸어. 실제 대형 스크린에서 더 크게 쓸 거면 8K로 저장하면 돼.
-        8K는 브라우저 메모리를 많이 먹어서 오래 걸릴 수 있어.
+        웰컴보드는 대형 스크린용이라 <strong>최저 4K</strong>부터 제공해.
+        기본값은 8K이며, 저장 직전에 미리보기 확대 배율을 완전히 제거하고
+        실제 캔버스를 정확히 3840×2160 / 5760×3240 / 7680×4320으로 생성해.
+      </div>
+      <div class="field" style="margin-top:8px">
+        <label><strong>예상 출력 크기</strong><span id="expectedResolution">7680×4320 px</span></label>
       </div>
     </div>
 
@@ -394,7 +420,7 @@ input[type=range]{width:100%;accent-color:var(--blue)}
   <div class="toolbar">
     <div class="help">
       16:9 웰컴보드 전용 · 글자와 로고를 미리보기에서 직접 끌어서 이동할 수 있어.
-      <span class="screen-badge" id="resolutionBadge">4K PNG 권장</span>
+      <span class="screen-badge" id="resolutionBadge">8K PNG 권장</span>
     </div>
     <span class="status" id="status">레이아웃 정상</span>
   </div>
@@ -426,9 +452,14 @@ input[type=range]{width:100%;accent-color:var(--blue)}
       <div class="patch">
         <div class="patch-head">
           <strong>웰컴보드 제작기 업데이트</strong>
-          <span class="patch-current">V1.0.1 · 2026.08.26</span>
+          <span class="patch-current">V1.0.3 · 2026.08.26</span>
         </div>
         <ul>
+          <li>가짜 8K 출력 버그 수정: 미리보기 transform을 제거한 독립 캔버스에서 정확한 픽셀로 렌더링</li>
+          <li>출력 화질을 4K / 6K / 8K로 재구성하고 기본값을 8K로 상향</li>
+          <li>저장 직전 실제 캔버스 픽셀 검증 기능 추가</li>
+          <li>기관 로고 1~4 입력 영역을 2열에서 세로 1열로 변경</li>
+          <li>상업적 이용 가능한 무료 글꼴 4종 선택 기능 추가: Pretendard / SUIT / Noto Sans KR / Noto Serif KR</li>
           <li>한양대 흰색 기본 로고 4종 빠른 선택 기능 추가</li>
           <li>안내문 제작기에서 웰컴보드 기능을 별도 제작기로 분리</li>
           <li>브라운·블랙 웰컴보드 2종 지원</li>
@@ -478,6 +509,7 @@ const freshState=()=>({
   sub:EXAMPLE.sub,
   date:EXAMPLE.date,
   place:EXAMPLE.place,
+  font:"Pretendard",
 
   titleSize:66,
   subSize:25,
@@ -490,7 +522,7 @@ const freshState=()=>({
   infoX:50,
   infoY:74,
 
-  resolution:3840,
+  resolution:7680,
   outputName:"ERICA 본관 1층 웰컴보드",
   builtInLogo:"hyu_erica_white",
 
@@ -509,6 +541,13 @@ const stage=$("stage");
 const shell=$("shell");
 const logoObjs=[0,1,2,3].map(i=>$("logoObj"+i));
 const logoImgs=[0,1,2,3].map(i=>$("logoImg"+i));
+
+function fontFamily(v){
+  if(v==="SUIT") return '"SUIT Variable",SUIT,sans-serif';
+  if(v==="Noto Sans KR") return '"Noto Sans KR",sans-serif';
+  if(v==="Noto Serif KR") return '"Noto Serif KR",serif';
+  return '"Pretendard Variable",Pretendard,sans-serif';
+}
 
 function safeName(v){
   return (v||"웰컴보드")
@@ -565,6 +604,8 @@ function renderTemplate(){
 }
 
 function renderContent(){
+  document.querySelector(".content").style.fontFamily=fontFamily(state.font);
+
   $("previewTitle").textContent=state.title;
   $("previewSub").textContent=state.sub;
   $("previewInfo").textContent=[
@@ -641,6 +682,7 @@ function updateLogoControls(){
 function renderUI(){
   $("titleInput").value=state.title;
   $("subInput").value=state.sub;
+  $("fontSelect").value=state.font||"Pretendard";
   $("dateInput").value=state.date;
   $("placeInput").value=state.place;
 
@@ -663,9 +705,12 @@ function renderUI(){
   $("resolution").value=String(state.resolution);
   $("outputName").value=state.outputName;
   $("builtInLogo").value=state.builtInLogo||"hyu_erica_white";
+  const targetH=Math.round(state.resolution*9/16);
   $("resolutionBadge").textContent=
-    state.resolution===7680?"8K PNG":
-    state.resolution===3840?"4K PNG 권장":"Full HD PNG";
+    state.resolution===7680?"8K PNG 권장":
+    state.resolution===5760?"6K PNG":
+    "4K PNG";
+  $("expectedResolution").textContent=`${state.resolution}×${targetH} px`;
 
   renderTemplateButtons();
   updateLogoControls();
@@ -990,21 +1035,64 @@ function loadWorkFile(file){
 async function exportCanvas(){
   await document.fonts.ready;
 
-  const targetWidth=Number(state.resolution)||3840;
+  const targetWidth=Number(state.resolution)||7680;
+  const targetHeight=Math.round(targetWidth*9/16);
   const scale=targetWidth/1600;
 
-  page.classList.add("exporting");
+  /*
+    중요:
+    화면 미리보기의 page에는 transform:scale(...)이 걸려 있음.
+    그 상태로 html2canvas를 실행하면 미리보기 축소율까지 캡처 배율에 섞여
+    8K를 골라도 실제 결과가 4833px 같은 애매한 크기로 나올 수 있었음.
+
+    V1.0.3부터는 page를 통째로 복제한 뒤,
+    복제본의 transform을 완전히 제거하고 정확한 1600×900 기준으로 캡처함.
+  */
+  const clone=page.cloneNode(true);
+  clone.id="exportPageClone";
+  clone.classList.add("exporting");
+  clone.style.position="fixed";
+  clone.style.left="-20000px";
+  clone.style.top="0";
+  clone.style.width="1600px";
+  clone.style.height="900px";
+  clone.style.transform="none";
+  clone.style.transformOrigin="top left";
+  clone.style.boxShadow="none";
+  clone.style.margin="0";
+  clone.style.zIndex="-99999";
+
+  // 복제본 안에서 선택/드래그용 UI가 보이지 않게 강제
+  clone.querySelectorAll(".guide").forEach(el=>el.style.display="none");
+
+  document.body.appendChild(clone);
+
   try{
-    return await html2canvas(page,{
+    // 외부/데이터 이미지가 복제본에서 렌더링될 시간을 조금 줌
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+
+    const canvas=await html2canvas(clone,{
       scale,
+      width:1600,
+      height:900,
       useCORS:true,
       allowTaint:false,
       backgroundColor:"#ffffff",
       logging:false,
-      imageTimeout:10000
+      imageTimeout:15000,
+      removeContainer:true
     });
+
+    // 진짜 픽셀 수 검증. 틀리면 아예 저장하지 않음.
+    if(canvas.width!==targetWidth || canvas.height!==targetHeight){
+      throw new Error(
+        `출력 해상도 검증 실패: ${canvas.width}×${canvas.height} / 목표 ${targetWidth}×${targetHeight}`
+      );
+    }
+
+    return canvas;
   }finally{
-    page.classList.remove("exporting");
+    clone.remove();
   }
 }
 
@@ -1017,9 +1105,11 @@ async function exportPNG(){
     a.href=c.toDataURL("image/png");
     a.download=safeName(state.outputName)+".png";
     document.body.appendChild(a);a.click();a.remove();
+    $("status").className="status";
+    $("status").textContent=`PNG ${c.width}×${c.height} 생성 완료`;
   }catch(e){
     console.error(e);
-    alert("PNG 생성 중 오류가 났어. 8K라면 4K로 낮춰서 다시 시도해봐.");
+    alert("PNG 생성 중 오류가 났어.\n"+(e?.message||"브라우저 메모리 부족 가능성 있음")+"\n\n8K가 너무 무거운 환경이면 6K 또는 4K로 낮춰서 다시 시도해봐.");
   }finally{
     b.disabled=false;b.textContent="PNG 저장";
   }
@@ -1076,6 +1166,14 @@ bindRange("infoX","infoX","infoXO","%");
 bindRange("infoY","infoY","infoYO","%");
 
 $("exampleBtn").onclick=loadExample;
+
+$("fontSelect").onchange=e=>{
+  state.font=e.target.value;
+  renderContent();
+  checkLayout();
+  saveBrowserSoon();
+};
+
 $("clearTextBtn").onclick=()=>{
   state.title="";state.sub="";state.date="";state.place="";
   renderContent();renderUI();saveBrowserSoon();
