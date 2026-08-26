@@ -76,7 +76,13 @@ input:focus,select:focus,textarea:focus{
   width:100%;aspect-ratio:16/9;border-radius:6px;background:center/cover no-repeat #eee;
   border:1px solid #edf0f2;margin-bottom:5px
 }
-.template-name{display:block;font-size:10.5px;padding:1px 2px 2px}
+.template-name{display:block;font-size:10.5px;padding:1px 2px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.template-btn{position:relative}
+.template-no{
+  position:absolute;left:10px;top:10px;z-index:2;
+  background:rgba(20,20,20,.72);color:#fff;border-radius:999px;
+  padding:2px 6px;font-size:8.5px;font-weight:800
+}
 .range{
   display:grid;grid-template-columns:88px 1fr 48px;align-items:center;gap:7px;
   margin:7px 0;font-size:11.5px;color:#56636f
@@ -221,7 +227,7 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="head"><h1>웰컴보드 제작기</h1><span class="version">V1.0.3</span></div>
+  <div class="head"><h1>웰컴보드 제작기</h1><span class="version">V1.0.4</span></div>
   <p class="desc">
     ERICA 본관 1층 16:9 스크린용 웰컴보드 전용 제작기.
     행사명·일시·장소와 기관 로고를 배치하고 고해상도 이미지로 저장해. 한양대 흰색 로고는 기본 에셋에서 바로 선택할 수 있고, 상업적 이용 가능한 무료 글꼴만 제공해.
@@ -229,19 +235,10 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 
   <section class="section">
     <h2>1. 웰컴보드 디자인</h2>
-    <div class="template-grid">
-      <button type="button" class="template-btn active" data-template="brown">
-        <span class="template-thumb" id="thumbBrown"></span>
-        <span class="template-name">브라운 클래식</span>
-      </button>
-      <button type="button" class="template-btn" data-template="black">
-        <span class="template-thumb" id="thumbBlack"></span>
-        <span class="template-name">블랙 클래식</span>
-      </button>
-    </div>
+    <div class="template-grid" id="templateGrid"></div>
     <div class="note" style="margin-top:9px">
-      기존 안내문 제작기의 웰컴보드 배경을 그대로 복사해서 쓰면 돼.
-      <strong>template_13.png = 브라운 / template_14.png = 블랙</strong>
+      총 8종. 기존 브라운·블랙 2종 + 신규 골드/다크 6종을 지원해.
+      각 배경은 <strong>templates/</strong> 폴더에 아래 파일명 그대로 넣으면 돼.
     </div>
   </section>
 
@@ -452,9 +449,12 @@ input[type=range]{width:100%;accent-color:var(--blue)}
       <div class="patch">
         <div class="patch-head">
           <strong>웰컴보드 제작기 업데이트</strong>
-          <span class="patch-current">V1.0.3 · 2026.08.26</span>
+          <span class="patch-current">V1.0.4 · 2026.08.26</span>
         </div>
         <ul>
+          <li>웰컴보드 템플릿을 2종에서 8종으로 확대</li>
+          <li>신규 골드·다크 계열 템플릿 6종 추가</li>
+          <li>템플릿 선택 UI를 동적 카드 방식으로 변경</li>
           <li>가짜 8K 출력 버그 수정: 미리보기 transform을 제거한 독립 캔버스에서 정확한 픽셀로 렌더링</li>
           <li>출력 화질을 4K / 6K / 8K로 재구성하고 기본값을 8K로 상향</li>
           <li>저장 직전 실제 캔버스 픽셀 검증 기능 추가</li>
@@ -481,6 +481,17 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 
 const $=id=>document.getElementById(id);
 const FEEDBACK_EMAIL="keun0810@hanyang.ac.kr";
+
+const TEMPLATES=[
+  {id:"brown",name:"브라운 클래식",file:"templates/welcome_brown.png",legacy:"templates/template_13.png"},
+  {id:"black",name:"블랙 클래식",file:"templates/welcome_black.png",legacy:"templates/template_14.png"},
+  {id:"classic_gold",name:"클래식 골드 프레임",file:"templates/welcome_template_03_classic_gold_frame.png"},
+  {id:"gold_wave",name:"골드 웨이브 스테이지",file:"templates/welcome_template_04_gold_wave_stage.png"},
+  {id:"modern_gold",name:"모던 골드 패널",file:"templates/welcome_template_05_modern_gold_panel.png"},
+  {id:"brown_stage",name:"브라운 스테이지 프레임",file:"templates/welcome_template_06_brown_stage_frame.png"},
+  {id:"black_display",name:"블랙 골드 디스플레이",file:"templates/welcome_template_07_black_gold_display_frame.png"},
+  {id:"dark_gold",name:"다크 골드 엣지",file:"templates/welcome_template_08_dark_gold_edge_frame.png"}
+];
 
 const BUILT_IN_LOGOS={
   hyu_white:"logos/hyu_white.png",
@@ -556,15 +567,16 @@ function safeName(v){
     .trim() || "웰컴보드";
 }
 
-function preferredTemplatePath(){
-  return state.template==="brown"
-    ?"templates/welcome_brown.png"
-    :"templates/welcome_black.png";
+function currentTemplate(){
+  return TEMPLATES.find(t=>t.id===state.template) || TEMPLATES[0];
 }
+
+function preferredTemplatePath(){
+  return currentTemplate().file;
+}
+
 function legacyTemplatePath(){
-  return state.template==="brown"
-    ?"templates/template_13.png"
-    :"templates/template_14.png";
+  return currentTemplate().legacy || "";
 }
 
 function renderTemplate(){
@@ -572,7 +584,7 @@ function renderTemplate(){
   triedLegacyPath=false;
   $("templateMissing").style.display="none";
   $("fallback").style.display="none";
-  $("fallback").classList.toggle("black",state.template==="black");
+  $("fallback").classList.toggle("black",state.template!=="brown");
 
   const img=$("templateBg");
   img.style.display="block";
@@ -584,23 +596,20 @@ function renderTemplate(){
   };
 
   img.onerror=()=>{
-    if(!triedLegacyPath){
+    const legacy=legacyTemplatePath();
+    if(!triedLegacyPath && legacy){
       triedLegacyPath=true;
-      img.src=legacyTemplatePath()+"?v="+Date.now();
+      img.src=legacy+"?v="+Date.now();
       return;
     }
     templateReady=false;
     img.style.display="none";
     $("fallback").style.display="block";
     $("templateMissing").style.display="block";
+    $("templateMissing").textContent="템플릿 파일 없음 · "+preferredTemplatePath();
   };
 
   img.src=preferredTemplatePath()+"?v="+Date.now();
-
-  $("thumbBrown").style.backgroundImage=
-    'url("templates/welcome_brown.png"),url("templates/template_13.png")';
-  $("thumbBlack").style.backgroundImage=
-    'url("templates/welcome_black.png"),url("templates/template_14.png")';
 }
 
 function renderContent(){
@@ -645,6 +654,43 @@ function renderLogos(){
       img.removeAttribute("src");
     }
   }
+}
+
+function buildTemplateGrid(){
+  const grid=$("templateGrid");
+  grid.innerHTML="";
+
+  TEMPLATES.forEach((item,idx)=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="template-btn"+(item.id===state.template?" active":"");
+    b.dataset.template=item.id;
+
+    const no=document.createElement("span");
+    no.className="template-no";
+    no.textContent=String(idx+1).padStart(2,"0");
+
+    const thumb=document.createElement("span");
+    thumb.className="template-thumb";
+    thumb.style.backgroundImage=`url("${item.file}")`;
+
+    const name=document.createElement("span");
+    name.className="template-name";
+    name.textContent=item.name;
+
+    b.appendChild(no);
+    b.appendChild(thumb);
+    b.appendChild(name);
+
+    b.addEventListener("click",()=>{
+      state.template=item.id;
+      renderTemplateButtons();
+      renderTemplate();
+      saveBrowserSoon();
+    });
+
+    grid.appendChild(b);
+  });
 }
 
 function renderTemplateButtons(){
@@ -717,6 +763,7 @@ function renderUI(){
 }
 
 function render(){
+  buildTemplateGrid();
   renderTemplate();
   renderContent();
   renderLogos();
@@ -1045,7 +1092,7 @@ async function exportCanvas(){
     그 상태로 html2canvas를 실행하면 미리보기 축소율까지 캡처 배율에 섞여
     8K를 골라도 실제 결과가 4833px 같은 애매한 크기로 나올 수 있었음.
 
-    V1.0.3부터는 page를 통째로 복제한 뒤,
+    V1.0.4부터는 page를 통째로 복제한 뒤,
     복제본의 transform을 완전히 제거하고 정확한 1600×900 기준으로 캡처함.
   */
   const clone=page.cloneNode(true);
@@ -1137,16 +1184,6 @@ async function exportPDF(){
     b.disabled=false;b.textContent="PDF 저장";
   }
 }
-
-/* template */
-document.querySelectorAll("[data-template]").forEach(b=>{
-  b.addEventListener("click",()=>{
-    state.template=b.dataset.template;
-    renderTemplateButtons();
-    renderTemplate();
-    saveBrowserSoon();
-  });
-});
 
 /* content */
 bindText("titleInput","title");
