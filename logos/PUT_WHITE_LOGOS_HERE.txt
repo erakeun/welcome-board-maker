@@ -1,0 +1,8 @@
+웰컴보드 제작기 기본 로고 빠른 선택용 파일명
+
+hyu_white.png
+hyu_erica_white.png
+hyu_round_white.png
+hyu_lion_white.png
+
+기존 안내문 제작기의 logos 폴더에서 이 4개 파일을 복사해오면 됩니다.

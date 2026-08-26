@@ -1,0 +1,1203 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>웰컴보드 제작기</title>
+
+<link rel="stylesheet" as="style" crossorigin
+href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<style>
+:root{
+  --blue:#0E4A84;
+  --line:#dce3e9;
+  --bg:#eef2f5;
+  --text:#1f2a35;
+  --muted:#6c7782;
+  --page-w:1600px;
+  --page-h:900px;
+  --scale:.62;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,
+  "Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  color:var(--text);background:var(--bg)
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled,input:disabled{opacity:.48;cursor:not-allowed}
+.app{min-height:100vh;display:grid;grid-template-columns:400px minmax(0,1fr)}
+.sidebar{
+  height:100vh;overflow:auto;position:sticky;top:0;z-index:20;
+  background:#fff;border-right:1px solid var(--line);padding:22px 17px 35px
+}
+.head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.head h1{font-size:24px;margin:0;letter-spacing:-.045em}
+.version{font-size:11px;padding:5px 9px;border-radius:999px;background:#edf3f8;color:#45647e}
+.desc{font-size:12px;color:var(--muted);line-height:1.55;margin:8px 0 16px}
+.section{padding:16px 0;border-top:1px solid #edf0f2}
+.section h2{font-size:14px;margin:0 0 11px}
+.note{
+  border:1px solid #ead9aa;background:#fffaf0;border-radius:9px;padding:9px 10px;
+  font-size:11px;line-height:1.55;color:#715a25;margin-bottom:10px
+}
+.field{margin-bottom:10px}
+.field label{
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  font-size:12px;color:#465463;margin-bottom:6px
+}
+.field label strong{color:#27333e}
+input[type=text],select,textarea,.control{
+  width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;
+  padding:9px 10px;outline:none;color:var(--text)
+}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+input:focus,select:focus,textarea:focus{
+  border-color:#8db1d2;box-shadow:0 0 0 3px rgba(14,74,132,.08)
+}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.template-btn{
+  border:1px solid var(--line);border-radius:9px;background:#fff;padding:6px;text-align:left
+}
+.template-btn.active{outline:2px solid var(--blue);outline-offset:-2px;color:var(--blue);font-weight:800}
+.template-thumb{
+  width:100%;aspect-ratio:16/9;border-radius:6px;background:center/cover no-repeat #eee;
+  border:1px solid #edf0f2;margin-bottom:5px
+}
+.template-name{display:block;font-size:10.5px;padding:1px 2px 2px}
+.range{
+  display:grid;grid-template-columns:88px 1fr 48px;align-items:center;gap:7px;
+  margin:7px 0;font-size:11.5px;color:#56636f
+}
+.range output{text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.actions button,.slot-actions button{
+  border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 6px;
+  color:#465664;font-size:11px;font-weight:700
+}
+.built-logo-box{
+  border:1px solid #d7e2eb;background:#f4f8fb;border-radius:9px;padding:9px 10px;margin-bottom:10px
+}
+.built-logo-box .row{align-items:end}
+.built-logo-box .hint{font-size:10.5px;color:#657584;line-height:1.45;margin-top:6px}
+.logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.logo-slot{
+  border:1px solid var(--line);border-radius:9px;background:#f8fafb;padding:8px
+}
+.logo-slot.active{outline:2px solid var(--blue);outline-offset:-2px;background:#f2f7fb}
+.logo-slot strong{font-size:11px;display:block;margin-bottom:5px}
+.logo-slot input{font-size:10px;padding:6px}
+.slot-actions{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:5px}
+.slot-actions button{padding:5px 3px;font-size:9.5px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.btn{border:0;border-radius:9px;padding:11px;font-size:12px;font-weight:800}
+.primary{background:var(--blue);color:#fff}
+.secondary{background:#e9eef2;color:#293845}
+.danger{background:#fff1f1;color:#a43434;border:1px solid #ffd2d2}
+.feedback-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.feedback-actions a,.feedback-actions button{
+  border:1px solid var(--line);background:#fff;color:#314555;border-radius:8px;
+  padding:9px 7px;text-decoration:none;text-align:center;font-size:11px;font-weight:700
+}
+.workspace{height:100vh;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.toolbar{
+  min-height:54px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);padding:10px 18px
+}
+.help{font-size:12px;color:var(--muted)}
+.screen-badge{
+  display:inline-flex;margin-left:6px;background:#342c29;color:#f1d078;
+  border-radius:999px;padding:5px 8px;font-size:10px;font-weight:800
+}
+.status{
+  font-size:11px;padding:5px 9px;border-radius:999px;background:#eaf6ee;
+  color:#2d6f46;white-space:nowrap
+}
+.status.warn{background:#fff1d5;color:#8a6100}
+.stage{
+  flex:1;overflow:auto;display:grid;place-items:start center;padding:30px 35px 55px;
+  background:radial-gradient(circle at 20% 10%,rgba(255,255,255,.88),transparent 32%),#e8edf1
+}
+.right-column{width:max-content;max-width:100%}
+.shell{
+  position:relative;width:calc(var(--page-w)*var(--scale));
+  height:calc(var(--page-h)*var(--scale));margin:0 auto
+}
+.page{
+  position:absolute;left:0;top:0;width:var(--page-w);height:var(--page-h);
+  transform:scale(var(--scale));transform-origin:top left;overflow:hidden;
+  background:#292321;box-shadow:0 14px 38px rgba(30,45,60,.22);isolation:isolate
+}
+.page.exporting{box-shadow:none}
+.template-bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:fill;z-index:0;pointer-events:none
+}
+.fallback{
+  position:absolute;inset:0;z-index:0;background:#292321;border:5px solid #b88e3c;display:none
+}
+.fallback.black{background:#171717}
+.template-missing{
+  position:absolute;right:24px;bottom:20px;background:rgba(0,0,0,.65);color:#fff;
+  border-radius:8px;padding:8px 10px;font-size:13px;z-index:50;display:none
+}
+.content{position:absolute;inset:0;z-index:5;color:#fff;pointer-events:none}
+.text-block{
+  position:absolute;transform:translate(-50%,-50%);text-align:center;
+  white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere;
+  pointer-events:auto;cursor:move;user-select:none;touch-action:none
+}
+.main-title{
+  left:var(--title-x,50%);top:var(--title-y,47%);width:88%;
+  font-size:var(--title-size,66px);font-weight:850;line-height:1.15;letter-spacing:-.045em
+}
+.sub{
+  left:var(--sub-x,50%);top:var(--sub-y,60%);width:80%;
+  font-size:var(--sub-size,25px);font-weight:550;line-height:1.35
+}
+.info{
+  left:var(--info-x,50%);top:var(--info-y,74%);width:76%;
+  font-size:var(--info-size,30px);font-weight:500;line-height:1.55;letter-spacing:-.02em
+}
+.logo-obj{
+  position:absolute;left:50%;top:20%;width:18%;transform:translate(-50%,-50%);
+  z-index:10;touch-action:none;user-select:none;cursor:grab
+}
+.logo-obj.locked{cursor:not-allowed}
+.logo-obj img{
+  display:block;width:100%;height:auto;max-height:145px;object-fit:contain;
+  pointer-events:none;-webkit-user-drag:none
+}
+/* 요청 반영: 로고 선택 테두리는 아예 표시하지 않음 */
+.guide{position:absolute;display:none;background:#e2b343;opacity:.72;pointer-events:none;z-index:40}
+.guide.v{top:0;bottom:0;left:50%;width:1px}
+.guide.h{left:0;right:0;top:50%;height:1px}
+.page.dragging .guide{display:block}
+.page.exporting .guide{display:none}
+.patch{
+  width:100%;margin:17px auto 0;background:#fff;border:1px solid #dfe5ea;
+  border-radius:10px;padding:13px 15px;color:#334353;font-size:11px;line-height:1.55
+}
+.patch-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.patch-head strong{font-size:12px}
+.patch-current{
+  background:#edf3f8;color:#53728c;border-radius:999px;padding:4px 7px;font-size:9.5px
+}
+.patch ul{margin:8px 0 0;padding-left:17px}
+.hidden-file{display:none}
+
+@media(max-width:1000px){
+  .app{grid-template-columns:345px minmax(0,1fr)}
+  .sidebar{padding-left:13px;padding-right:13px}
+}
+@media(max-width:760px){
+  .app{display:block}.sidebar{height:auto;position:relative}
+  .workspace{height:auto;min-height:80vh}.toolbar{position:sticky;top:0}
+  .stage{min-height:70vh}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="head"><h1>웰컴보드 제작기</h1><span class="version">V1.0.1</span></div>
+  <p class="desc">
+    ERICA 본관 1층 16:9 스크린용 웰컴보드 전용 제작기.
+    행사명·일시·장소와 기관 로고를 배치하고 고해상도 이미지로 저장해. 한양대 흰색 로고는 기본 에셋에서 바로 선택할 수 있어.
+  </p>
+
+  <section class="section">
+    <h2>1. 웰컴보드 디자인</h2>
+    <div class="template-grid">
+      <button type="button" class="template-btn active" data-template="brown">
+        <span class="template-thumb" id="thumbBrown"></span>
+        <span class="template-name">브라운 클래식</span>
+      </button>
+      <button type="button" class="template-btn" data-template="black">
+        <span class="template-thumb" id="thumbBlack"></span>
+        <span class="template-name">블랙 클래식</span>
+      </button>
+    </div>
+    <div class="note" style="margin-top:9px">
+      기존 안내문 제작기의 웰컴보드 배경을 그대로 복사해서 쓰면 돼.
+      <strong>template_13.png = 브라운 / template_14.png = 블랙</strong>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>2. 웰컴보드 내용</h2>
+    <div class="field">
+      <label><strong>메인 행사명</strong></label>
+      <textarea id="titleInput" rows="3"></textarea>
+    </div>
+    <div class="field">
+      <label><strong>보조 문구</strong><span>선택</span></label>
+      <input id="subInput" type="text" placeholder="예: 방문을 환영합니다">
+    </div>
+    <div class="field">
+      <label><strong>일시</strong></label>
+      <input id="dateInput" type="text">
+    </div>
+    <div class="field">
+      <label><strong>장소</strong></label>
+      <input id="placeInput" type="text">
+    </div>
+
+    <div class="actions">
+      <button type="button" id="exampleBtn">예시 다시 불러오기</button>
+      <button type="button" id="clearTextBtn">문구 비우기</button>
+    </div>
+
+    <div style="margin-top:12px">
+      <div class="range"><span>행사명 크기</span><input id="titleSize" type="range" min="38" max="108" value="66"><output id="titleSizeO">66</output></div>
+      <div class="range"><span>보조문구 크기</span><input id="subSize" type="range" min="14" max="60" value="25"><output id="subSizeO">25</output></div>
+      <div class="range"><span>상세정보 크기</span><input id="infoSize" type="range" min="18" max="56" value="30"><output id="infoSizeO">30</output></div>
+    </div>
+
+    <div class="note" style="margin-top:12px">
+      아래 위치 슬라이더를 쓰거나, 오른쪽 미리보기의 <strong>행사명·보조문구·일시/장소를 직접 끌어서</strong> 옮길 수도 있어.
+    </div>
+
+    <div class="range"><span>행사명 X</span><input id="titleX" type="range" min="10" max="90" value="50"><output id="titleXO">50%</output></div>
+    <div class="range"><span>행사명 Y</span><input id="titleY" type="range" min="20" max="68" value="47"><output id="titleYO">47%</output></div>
+    <div class="range"><span>보조문구 X</span><input id="subX" type="range" min="10" max="90" value="50"><output id="subXO">50%</output></div>
+    <div class="range"><span>보조문구 Y</span><input id="subY" type="range" min="30" max="78" value="60"><output id="subYO">60%</output></div>
+    <div class="range"><span>일시·장소 X</span><input id="infoX" type="range" min="10" max="90" value="50"><output id="infoXO">50%</output></div>
+    <div class="range"><span>일시·장소 Y</span><input id="infoY" type="range" min="45" max="90" value="74"><output id="infoYO">74%</output></div>
+  </section>
+
+  <section class="section">
+    <h2>3. 기관 로고</h2>
+    <div class="note">
+      최대 4개. 자동 정렬 후 직접 끌어서 세부 위치를 조절할 수 있어.
+      미리보기의 파란/금색 선택 테두리는 아예 없앴어.
+    </div>
+
+    <div class="built-logo-box">
+      <div class="field" style="margin-bottom:7px">
+        <label><strong>한양대 기본 로고 빠른 선택</strong><span>기관 로고 1에 삽입</span></label>
+        <select id="builtInLogo">
+          <option value="none">직접 업로드 / 사용 안 함</option>
+          <option value="hyu_white">한양대학교 가로형 · 흰색</option>
+          <option value="hyu_erica_white" selected>한양대학교 ERICA 가로형 · 흰색</option>
+          <option value="hyu_round_white">한양대학교 원형 · 흰색</option>
+          <option value="hyu_lion_white">한양대학교 사자 · 흰색</option>
+        </select>
+      </div>
+      <div class="actions" style="margin-top:0">
+        <button type="button" id="applyBuiltInLogo">기관 로고 1에 적용</button>
+        <button type="button" id="clearBuiltInLogo">기본 로고 제거</button>
+      </div>
+      <div class="hint">
+        아래 <code>logos/</code> 폴더에 흰색 로고 파일 4개를 넣어두면 업로드 없이 바로 사용할 수 있어.
+      </div>
+    </div>
+
+    <div class="logo-grid">
+      <div class="logo-slot active" data-slot="0">
+        <strong>기관 로고 1</strong>
+        <input type="file" id="logoFile0" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+        <div class="slot-actions"><button type="button" data-select="0">선택</button><button type="button" data-remove="0">삭제</button></div>
+      </div>
+      <div class="logo-slot" data-slot="1">
+        <strong>기관 로고 2</strong>
+        <input type="file" id="logoFile1" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+        <div class="slot-actions"><button type="button" data-select="1">선택</button><button type="button" data-remove="1">삭제</button></div>
+      </div>
+      <div class="logo-slot" data-slot="2">
+        <strong>기관 로고 3</strong>
+        <input type="file" id="logoFile2" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+        <div class="slot-actions"><button type="button" data-select="2">선택</button><button type="button" data-remove="2">삭제</button></div>
+      </div>
+      <div class="logo-slot" data-slot="3">
+        <strong>기관 로고 4</strong>
+        <input type="file" id="logoFile3" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+        <div class="slot-actions"><button type="button" data-select="3">선택</button><button type="button" data-remove="3">삭제</button></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" id="autoArrange">기관 로고 자동 정렬</button>
+      <button type="button" id="clearLogos">기관 로고 전체 삭제</button>
+    </div>
+
+    <div style="margin-top:11px">
+      <div class="field">
+        <label><strong>현재 선택 로고</strong><span id="selectedLabel">기관 로고 1</span></label>
+      </div>
+      <div class="range"><span>가로 위치</span><input id="logoX" type="range" min="3" max="97" value="38"><output id="logoXO">38%</output></div>
+      <div class="range"><span>세로 위치</span><input id="logoY" type="range" min="4" max="45" value="20"><output id="logoYO">20%</output></div>
+      <div class="range"><span>크기</span><input id="logoSize" type="range" min="5" max="42" value="18"><output id="logoSizeO">18%</output></div>
+      <div class="range"><span>투명도</span><input id="logoOpacity" type="range" min="10" max="100" value="100"><output id="logoOpacityO">100%</output></div>
+      <div class="actions">
+        <button type="button" id="lockBtn">🔒 위치 잠금</button>
+        <button type="button" id="resetLogo">선택 로고 초기화</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>4. 출력 · 저장</h2>
+
+    <div class="field">
+      <label><strong>출력 파일명</strong></label>
+      <input id="outputName" type="text" value="ERICA 본관 1층 웰컴보드">
+    </div>
+
+    <div class="field">
+      <label><strong>PNG 출력 화질</strong></label>
+      <select id="resolution">
+        <option value="1920">Full HD · 1920×1080</option>
+        <option value="3840" selected>4K · 3840×2160 권장</option>
+        <option value="7680">8K · 7680×4320 초고화질</option>
+      </select>
+      <div class="note" style="margin-top:6px">
+        기본값을 4K로 올렸어. 실제 대형 스크린에서 더 크게 쓸 거면 8K로 저장하면 돼.
+        8K는 브라우저 메모리를 많이 먹어서 오래 걸릴 수 있어.
+      </div>
+    </div>
+
+    <div class="btns">
+      <button class="btn primary" id="pngBtn">PNG 저장</button>
+      <button class="btn primary" id="pdfBtn">PDF 저장</button>
+      <button class="btn secondary" id="workSaveBtn">작업파일 저장</button>
+      <button class="btn secondary" id="workLoadBtn">작업파일 불러오기</button>
+      <button class="btn secondary" id="browserSaveBtn">브라우저 저장</button>
+      <button class="btn danger" id="resetAllBtn">전체 초기화</button>
+    </div>
+    <input class="hidden-file" id="workFile" type="file" accept=".json,.welcome.json,application/json">
+  </section>
+
+  <section class="section">
+    <h2>5. 피드백</h2>
+    <div class="feedback-actions">
+      <a id="feedbackMail" href="#">피드백 메일 보내기</a>
+      <button type="button" id="copyMail">메일 주소 복사</button>
+    </div>
+  </section>
+</aside>
+
+<main class="workspace">
+  <div class="toolbar">
+    <div class="help">
+      16:9 웰컴보드 전용 · 글자와 로고를 미리보기에서 직접 끌어서 이동할 수 있어.
+      <span class="screen-badge" id="resolutionBadge">4K PNG 권장</span>
+    </div>
+    <span class="status" id="status">레이아웃 정상</span>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="right-column">
+      <div class="shell" id="shell">
+        <div class="page" id="page">
+          <img class="template-bg" id="templateBg" alt="">
+          <div class="fallback" id="fallback"></div>
+          <div class="template-missing" id="templateMissing">템플릿 파일 없음 · 임시 배경 사용 중</div>
+
+          <div class="guide v"></div>
+          <div class="guide h"></div>
+
+          <div class="content">
+            <div class="text-block main-title" id="previewTitle" data-text="title"></div>
+            <div class="text-block sub" id="previewSub" data-text="sub"></div>
+            <div class="text-block info" id="previewInfo" data-text="info"></div>
+          </div>
+
+          <div class="logo-obj" id="logoObj0" data-index="0"><img id="logoImg0" alt=""></div>
+          <div class="logo-obj" id="logoObj1" data-index="1"><img id="logoImg1" alt=""></div>
+          <div class="logo-obj" id="logoObj2" data-index="2"><img id="logoImg2" alt=""></div>
+          <div class="logo-obj" id="logoObj3" data-index="3"><img id="logoImg3" alt=""></div>
+        </div>
+      </div>
+
+      <div class="patch">
+        <div class="patch-head">
+          <strong>웰컴보드 제작기 업데이트</strong>
+          <span class="patch-current">V1.0.1 · 2026.08.26</span>
+        </div>
+        <ul>
+          <li>한양대 흰색 기본 로고 4종 빠른 선택 기능 추가</li>
+          <li>안내문 제작기에서 웰컴보드 기능을 별도 제작기로 분리</li>
+          <li>브라운·블랙 웰컴보드 2종 지원</li>
+          <li>4K 기본 / 8K 선택 가능한 고해상도 PNG 출력</li>
+          <li>미리보기의 로고 선택 테두리 제거</li>
+          <li>행사명·보조문구·일시/장소를 각각 X/Y 이동 및 직접 드래그 가능</li>
+          <li>보조문구 글자 크기 조절 추가</li>
+          <li>기관 로고 최대 4개 업로드·자동 정렬·개별 이동·잠금 지원</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+(()=>{
+"use strict";
+
+const $=id=>document.getElementById(id);
+const FEEDBACK_EMAIL="keun0810@hanyang.ac.kr";
+
+const BUILT_IN_LOGOS={
+  hyu_white:"logos/hyu_white.png",
+  hyu_erica_white:"logos/hyu_erica_white.png",
+  hyu_round_white:"logos/hyu_round_white.png",
+  hyu_lion_white:"logos/hyu_lion_white.png"
+};
+
+const EXAMPLE={
+  title:"한양대 ERICA-겐트대학교 글로벌캠퍼스\nMOU 협약식",
+  sub:"",
+  date:"2023.11.08.(수) 14:30",
+  place:"본관 2층 프라임컨퍼런스홀"
+};
+
+const logoDefaults=()=>[
+  {data:"",name:"",x:38,y:20,w:18,opacity:1,locked:false},
+  {data:"",name:"",x:62,y:20,w:18,opacity:1,locked:false},
+  {data:"",name:"",x:28,y:20,w:16,opacity:1,locked:false},
+  {data:"",name:"",x:72,y:20,w:16,opacity:1,locked:false}
+];
+
+const freshState=()=>({
+  template:"brown",
+  title:EXAMPLE.title,
+  sub:EXAMPLE.sub,
+  date:EXAMPLE.date,
+  place:EXAMPLE.place,
+
+  titleSize:66,
+  subSize:25,
+  infoSize:30,
+
+  titleX:50,
+  titleY:47,
+  subX:50,
+  subY:60,
+  infoX:50,
+  infoY:74,
+
+  resolution:3840,
+  outputName:"ERICA 본관 1층 웰컴보드",
+  builtInLogo:"hyu_erica_white",
+
+  selectedLogo:0,
+  logos:logoDefaults()
+});
+
+let state=freshState();
+let drag=null;
+let templateReady=true;
+let saveTimer=null;
+let triedLegacyPath=false;
+
+const page=$("page");
+const stage=$("stage");
+const shell=$("shell");
+const logoObjs=[0,1,2,3].map(i=>$("logoObj"+i));
+const logoImgs=[0,1,2,3].map(i=>$("logoImg"+i));
+
+function safeName(v){
+  return (v||"웰컴보드")
+    .replace(/[\\/:*?"<>|]+/g," ")
+    .replace(/\s+/g," ")
+    .trim() || "웰컴보드";
+}
+
+function preferredTemplatePath(){
+  return state.template==="brown"
+    ?"templates/welcome_brown.png"
+    :"templates/welcome_black.png";
+}
+function legacyTemplatePath(){
+  return state.template==="brown"
+    ?"templates/template_13.png"
+    :"templates/template_14.png";
+}
+
+function renderTemplate(){
+  templateReady=true;
+  triedLegacyPath=false;
+  $("templateMissing").style.display="none";
+  $("fallback").style.display="none";
+  $("fallback").classList.toggle("black",state.template==="black");
+
+  const img=$("templateBg");
+  img.style.display="block";
+
+  img.onload=()=>{
+    templateReady=true;
+    $("templateMissing").style.display="none";
+    $("fallback").style.display="none";
+  };
+
+  img.onerror=()=>{
+    if(!triedLegacyPath){
+      triedLegacyPath=true;
+      img.src=legacyTemplatePath()+"?v="+Date.now();
+      return;
+    }
+    templateReady=false;
+    img.style.display="none";
+    $("fallback").style.display="block";
+    $("templateMissing").style.display="block";
+  };
+
+  img.src=preferredTemplatePath()+"?v="+Date.now();
+
+  $("thumbBrown").style.backgroundImage=
+    'url("templates/welcome_brown.png"),url("templates/template_13.png")';
+  $("thumbBlack").style.backgroundImage=
+    'url("templates/welcome_black.png"),url("templates/template_14.png")';
+}
+
+function renderContent(){
+  $("previewTitle").textContent=state.title;
+  $("previewSub").textContent=state.sub;
+  $("previewInfo").textContent=[
+    state.date?`일시 : ${state.date}`:"",
+    state.place?`장소 : ${state.place}`:""
+  ].filter(Boolean).join("\n");
+
+  page.style.setProperty("--title-size",state.titleSize+"px");
+  page.style.setProperty("--sub-size",state.subSize+"px");
+  page.style.setProperty("--info-size",state.infoSize+"px");
+
+  page.style.setProperty("--title-x",state.titleX+"%");
+  page.style.setProperty("--title-y",state.titleY+"%");
+  page.style.setProperty("--sub-x",state.subX+"%");
+  page.style.setProperty("--sub-y",state.subY+"%");
+  page.style.setProperty("--info-x",state.infoX+"%");
+  page.style.setProperty("--info-y",state.infoY+"%");
+}
+
+function renderLogos(){
+  for(let i=0;i<4;i++){
+    const item=state.logos[i];
+    const obj=logoObjs[i];
+    const img=logoImgs[i];
+
+    obj.style.left=item.x+"%";
+    obj.style.top=item.y+"%";
+    obj.style.width=item.w+"%";
+    obj.style.opacity=item.opacity;
+    obj.classList.toggle("locked",!!item.locked);
+
+    if(item.data){
+      obj.style.display="block";
+      img.src=item.data;
+    }else{
+      obj.style.display="none";
+      img.removeAttribute("src");
+    }
+  }
+}
+
+function renderTemplateButtons(){
+  document.querySelectorAll("[data-template]").forEach(b=>{
+    b.classList.toggle("active",b.dataset.template===state.template);
+  });
+}
+
+function updateLogoControls(){
+  const i=state.selectedLogo;
+  const item=state.logos[i];
+
+  document.querySelectorAll("[data-slot]").forEach(el=>{
+    el.classList.toggle("active",Number(el.dataset.slot)===i);
+  });
+
+  $("selectedLabel").textContent=`기관 로고 ${i+1}${item.name?` · ${item.name}`:""}`;
+  $("logoX").value=item.x;
+  $("logoY").value=item.y;
+  $("logoSize").value=item.w;
+  $("logoOpacity").value=Math.round(item.opacity*100);
+
+  $("logoXO").value=Math.round(item.x)+"%";
+  $("logoYO").value=Math.round(item.y)+"%";
+  $("logoSizeO").value=Math.round(item.w)+"%";
+  $("logoOpacityO").value=Math.round(item.opacity*100)+"%";
+
+  ["logoX","logoY","logoSize","logoOpacity"].forEach(id=>{
+    $(id).disabled=!!item.locked;
+  });
+  $("resetLogo").disabled=!!item.locked;
+  $("lockBtn").textContent=item.locked?"🔓 잠금 해제":"🔒 위치 잠금";
+}
+
+function renderUI(){
+  $("titleInput").value=state.title;
+  $("subInput").value=state.sub;
+  $("dateInput").value=state.date;
+  $("placeInput").value=state.place;
+
+  const simple=[
+    ["titleSize","titleSizeO",state.titleSize,""],
+    ["subSize","subSizeO",state.subSize,""],
+    ["infoSize","infoSizeO",state.infoSize,""],
+    ["titleX","titleXO",state.titleX,"%"],
+    ["titleY","titleYO",state.titleY,"%"],
+    ["subX","subXO",state.subX,"%"],
+    ["subY","subYO",state.subY,"%"],
+    ["infoX","infoXO",state.infoX,"%"],
+    ["infoY","infoYO",state.infoY,"%"]
+  ];
+  simple.forEach(([id,out,val,suffix])=>{
+    $(id).value=val;
+    $(out).value=Math.round(val)+suffix;
+  });
+
+  $("resolution").value=String(state.resolution);
+  $("outputName").value=state.outputName;
+  $("builtInLogo").value=state.builtInLogo||"hyu_erica_white";
+  $("resolutionBadge").textContent=
+    state.resolution===7680?"8K PNG":
+    state.resolution===3840?"4K PNG 권장":"Full HD PNG";
+
+  renderTemplateButtons();
+  updateLogoControls();
+}
+
+function render(){
+  renderTemplate();
+  renderContent();
+  renderLogos();
+  renderUI();
+  fit();
+  checkLayout();
+  saveBrowserSoon();
+}
+
+function fit(){
+  const aw=Math.max(280,stage.clientWidth-70);
+  const ah=Math.max(380,stage.clientHeight-70);
+  let s=Math.min(aw/1600,ah/900,.92);
+  s=Math.max(.23,s);
+  document.documentElement.style.setProperty("--scale",s.toFixed(4));
+  shell.style.width=(1600*s)+"px";
+  shell.style.height=(900*s)+"px";
+}
+
+function checkLayout(){
+  const st=$("status");
+  const el=$("previewTitle");
+  const line=parseFloat(getComputedStyle(el).lineHeight)||state.titleSize*1.15;
+  const tooLong=el.scrollHeight>line*3.5;
+
+  if(!templateReady){
+    st.className="status warn";
+    st.textContent="배경 asset 없음 · 임시 배경";
+  }else if(tooLong){
+    st.className="status warn";
+    st.textContent="행사명이 너무 김";
+  }else{
+    st.className="status";
+    st.textContent="레이아웃 정상";
+  }
+}
+
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+
+function saveBrowserSoon(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    try{
+      const copy=JSON.parse(JSON.stringify(state));
+      copy.logos=copy.logos.map(x=>({...x,data:""}));
+      localStorage.setItem("welcomeBoardMakerV10",JSON.stringify(copy));
+    }catch(e){}
+  },160);
+}
+
+function browserSave(){
+  try{
+    const copy=JSON.parse(JSON.stringify(state));
+    copy.logos=copy.logos.map(x=>({...x,data:""}));
+    localStorage.setItem("welcomeBoardMakerV10",JSON.stringify(copy));
+    alert("현재 설정을 브라우저에 저장했어.\n업로드한 기관 로고 이미지는 저장 대상에서 제외돼.");
+  }catch(e){
+    alert("브라우저 저장에 실패했어.");
+  }
+}
+
+function loadBrowser(){
+  try{
+    const x=JSON.parse(localStorage.getItem("welcomeBoardMakerV10")||"null");
+    if(!x)return;
+    const b=freshState();
+    state={...b,...x};
+    const base=logoDefaults();
+    state.logos=(x.logos||base).map((item,i)=>({...base[i],...item,data:""}));
+    while(state.logos.length<4)state.logos.push(base[state.logos.length]);
+  }catch(e){}
+}
+
+function selectLogo(i){
+  state.selectedLogo=clamp(Number(i)||0,0,3);
+  updateLogoControls();
+  saveBrowserSoon();
+}
+
+function loadBuiltInLogoToSlot1(key){
+  const path=BUILT_IN_LOGOS[key];
+  if(!path){
+    alert("기본 로고를 선택해줘.");
+    return;
+  }
+
+  fetch(path,{cache:"no-store"})
+    .then(r=>{
+      if(!r.ok)throw new Error("missing");
+      return r.blob();
+    })
+    .then(blob=>{
+      const reader=new FileReader();
+      reader.onload=()=>{
+        state.logos[0]={
+          ...state.logos[0],
+          data:String(reader.result||""),
+          name:path.split("/").pop(),
+          x:38,y:20,w:19,opacity:1,locked:false
+        };
+        state.selectedLogo=0;
+        autoArrange(false);
+        renderLogos();
+        updateLogoControls();
+        saveBrowserSoon();
+      };
+      reader.readAsDataURL(blob);
+    })
+    .catch(()=>{
+      alert("기본 로고 파일을 찾지 못했어.\n\n필요 파일:\n"+path);
+    });
+}
+
+function clearBuiltInLogoSlot(){
+  removeLogo(0);
+}
+
+function loadLogo(i,file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    state.logos[i].data=String(r.result||"");
+    state.logos[i].name=file.name||"";
+    state.selectedLogo=i;
+    autoArrange(false);
+    renderLogos();
+    updateLogoControls();
+    saveBrowserSoon();
+  };
+  r.readAsDataURL(file);
+}
+
+function removeLogo(i){
+  state.logos[i]={...logoDefaults()[i]};
+  const input=$("logoFile"+i);
+  if(input)input.value="";
+  renderLogos();
+  updateLogoControls();
+  saveBrowserSoon();
+}
+
+function clearLogos(){
+  state.logos=logoDefaults();
+  for(let i=0;i<4;i++){
+    const input=$("logoFile"+i);
+    if(input)input.value="";
+  }
+  state.selectedLogo=0;
+  renderLogos();
+  updateLogoControls();
+  saveBrowserSoon();
+}
+
+function autoArrange(showMessage=true){
+  const active=[];
+  state.logos.forEach((x,i)=>{if(x.data)active.push(i)});
+  if(!active.length){
+    if(showMessage)alert("먼저 기관 로고를 한 개 이상 올려줘.");
+    return;
+  }
+
+  const count=active.length;
+  const xs=count===1?[50]:
+           count===2?[38,62]:
+           count===3?[27,50,73]:
+           [18,39,61,82];
+  const width=count===1?22:count===2?19:count===3?16:14;
+
+  active.forEach((idx,j)=>{
+    const item=state.logos[idx];
+    if(item.locked)return;
+    item.x=xs[j];
+    item.y=20;
+    item.w=width;
+    item.opacity=1;
+  });
+
+  renderLogos();
+  updateLogoControls();
+  saveBrowserSoon();
+}
+
+function loadExample(){
+  state.title=EXAMPLE.title;
+  state.sub=EXAMPLE.sub;
+  state.date=EXAMPLE.date;
+  state.place=EXAMPLE.place;
+  renderContent();
+  renderUI();
+  saveBrowserSoon();
+}
+
+function bindText(id,key){
+  $(id).addEventListener("input",e=>{
+    state[key]=e.target.value;
+    renderContent();
+    checkLayout();
+    saveBrowserSoon();
+  });
+}
+
+function bindRange(id,key,out,suffix=""){
+  $(id).addEventListener("input",e=>{
+    state[key]=Number(e.target.value);
+    $(out).value=Math.round(state[key])+suffix;
+    renderContent();
+    saveBrowserSoon();
+  });
+}
+
+function pointerPagePercent(e,rect){
+  return {
+    x:(e.clientX-rect.left)/rect.width*100,
+    y:(e.clientY-rect.top)/rect.height*100
+  };
+}
+
+function logoPointerDown(e){
+  const i=Number(e.currentTarget.dataset.index);
+  const item=state.logos[i];
+  if(!item.data)return;
+
+  e.preventDefault();
+  selectLogo(i);
+  if(item.locked)return;
+
+  drag={type:"logo",index:i,rect:page.getBoundingClientRect()};
+  page.classList.add("dragging");
+  e.currentTarget.setPointerCapture?.(e.pointerId);
+}
+
+function textPointerDown(e){
+  e.preventDefault();
+  drag={type:"text",key:e.currentTarget.dataset.text,rect:page.getBoundingClientRect()};
+  page.classList.add("dragging");
+  e.currentTarget.setPointerCapture?.(e.pointerId);
+}
+
+function pointerMove(e){
+  if(!drag)return;
+  let {x,y}=pointerPagePercent(e,drag.rect);
+
+  if(Math.abs(x-50)<1.1)x=50;
+  if(Math.abs(y-50)<1.1)y=50;
+
+  if(drag.type==="logo"){
+    const item=state.logos[drag.index];
+    if(item.locked)return;
+    item.x=clamp(x,3,97);
+    item.y=clamp(y,4,48);
+    renderLogos();
+    updateLogoControls();
+    return;
+  }
+
+  const key=drag.key;
+  if(key==="title"){
+    state.titleX=clamp(x,10,90);
+    state.titleY=clamp(y,20,68);
+  }else if(key==="sub"){
+    state.subX=clamp(x,10,90);
+    state.subY=clamp(y,30,78);
+  }else if(key==="info"){
+    state.infoX=clamp(x,10,90);
+    state.infoY=clamp(y,45,90);
+  }
+  renderContent();
+  renderUI();
+}
+
+function pointerUp(){
+  if(!drag)return;
+  drag=null;
+  page.classList.remove("dragging");
+  saveBrowserSoon();
+}
+
+function makeWorkFile(){
+  const payload={
+    app:"welcome-board-maker",
+    version:"1.0",
+    savedAt:new Date().toISOString(),
+    state:JSON.parse(JSON.stringify(state))
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=safeName(state.outputName)+".welcome.json";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function loadWorkFile(file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const raw=JSON.parse(String(r.result||"{}"));
+      const x=raw.state||raw;
+      const b=freshState();
+      const base=logoDefaults();
+      state={...b,...x};
+      state.logos=(x.logos||base).map((item,i)=>({...base[i],...item}));
+      while(state.logos.length<4)state.logos.push(base[state.logos.length]);
+      render();
+    }catch(e){
+      alert("작업파일을 읽을 수 없어.");
+    }finally{
+      $("workFile").value="";
+    }
+  };
+  r.readAsText(file);
+}
+
+async function exportCanvas(){
+  await document.fonts.ready;
+
+  const targetWidth=Number(state.resolution)||3840;
+  const scale=targetWidth/1600;
+
+  page.classList.add("exporting");
+  try{
+    return await html2canvas(page,{
+      scale,
+      useCORS:true,
+      allowTaint:false,
+      backgroundColor:"#ffffff",
+      logging:false,
+      imageTimeout:10000
+    });
+  }finally{
+    page.classList.remove("exporting");
+  }
+}
+
+async function exportPNG(){
+  const b=$("pngBtn");
+  b.disabled=true;b.textContent="생성 중...";
+  try{
+    const c=await exportCanvas();
+    const a=document.createElement("a");
+    a.href=c.toDataURL("image/png");
+    a.download=safeName(state.outputName)+".png";
+    document.body.appendChild(a);a.click();a.remove();
+  }catch(e){
+    console.error(e);
+    alert("PNG 생성 중 오류가 났어. 8K라면 4K로 낮춰서 다시 시도해봐.");
+  }finally{
+    b.disabled=false;b.textContent="PNG 저장";
+  }
+}
+
+async function exportPDF(){
+  const b=$("pdfBtn");
+  b.disabled=true;b.textContent="생성 중...";
+  try{
+    const c=await exportCanvas();
+    const {jsPDF}=window.jspdf;
+
+    const pdf=new jsPDF({
+      orientation:"landscape",
+      unit:"mm",
+      format:[338.67,190.5],
+      compress:true
+    });
+    pdf.addImage(c.toDataURL("image/png"),"PNG",0,0,338.67,190.5,undefined,"FAST");
+    pdf.save(safeName(state.outputName)+".pdf");
+  }catch(e){
+    console.error(e);
+    alert("PDF 생성 중 오류가 났어.");
+  }finally{
+    b.disabled=false;b.textContent="PDF 저장";
+  }
+}
+
+/* template */
+document.querySelectorAll("[data-template]").forEach(b=>{
+  b.addEventListener("click",()=>{
+    state.template=b.dataset.template;
+    renderTemplateButtons();
+    renderTemplate();
+    saveBrowserSoon();
+  });
+});
+
+/* content */
+bindText("titleInput","title");
+bindText("subInput","sub");
+bindText("dateInput","date");
+bindText("placeInput","place");
+
+bindRange("titleSize","titleSize","titleSizeO");
+bindRange("subSize","subSize","subSizeO");
+bindRange("infoSize","infoSize","infoSizeO");
+
+bindRange("titleX","titleX","titleXO","%");
+bindRange("titleY","titleY","titleYO","%");
+bindRange("subX","subX","subXO","%");
+bindRange("subY","subY","subYO","%");
+bindRange("infoX","infoX","infoXO","%");
+bindRange("infoY","infoY","infoYO","%");
+
+$("exampleBtn").onclick=loadExample;
+$("clearTextBtn").onclick=()=>{
+  state.title="";state.sub="";state.date="";state.place="";
+  renderContent();renderUI();saveBrowserSoon();
+};
+
+/* logos */
+$("builtInLogo").onchange=e=>{
+  state.builtInLogo=e.target.value;
+  saveBrowserSoon();
+};
+$("applyBuiltInLogo").onclick=()=>{
+  const key=$("builtInLogo").value;
+  if(key==="none"){
+    alert("기본 로고 종류를 선택하거나 아래에서 직접 파일을 올려줘.");
+    return;
+  }
+  state.builtInLogo=key;
+  loadBuiltInLogoToSlot1(key);
+};
+$("clearBuiltInLogo").onclick=clearBuiltInLogoSlot;
+
+for(let i=0;i<4;i++){
+  $("logoFile"+i).addEventListener("change",e=>loadLogo(i,e.target.files?.[0]));
+}
+document.querySelectorAll("[data-select]").forEach(b=>{
+  b.onclick=()=>selectLogo(Number(b.dataset.select));
+});
+document.querySelectorAll("[data-remove]").forEach(b=>{
+  b.onclick=()=>removeLogo(Number(b.dataset.remove));
+});
+$("autoArrange").onclick=()=>autoArrange(true);
+$("clearLogos").onclick=()=>{
+  if(confirm("기관 로고를 전부 삭제할까?"))clearLogos();
+};
+$("logoX").oninput=e=>{
+  const x=state.logos[state.selectedLogo];
+  if(x.locked)return;
+  x.x=Number(e.target.value);renderLogos();updateLogoControls();saveBrowserSoon();
+};
+$("logoY").oninput=e=>{
+  const x=state.logos[state.selectedLogo];
+  if(x.locked)return;
+  x.y=Number(e.target.value);renderLogos();updateLogoControls();saveBrowserSoon();
+};
+$("logoSize").oninput=e=>{
+  const x=state.logos[state.selectedLogo];
+  if(x.locked)return;
+  x.w=Number(e.target.value);renderLogos();updateLogoControls();saveBrowserSoon();
+};
+$("logoOpacity").oninput=e=>{
+  const x=state.logos[state.selectedLogo];
+  if(x.locked)return;
+  x.opacity=Number(e.target.value)/100;renderLogos();updateLogoControls();saveBrowserSoon();
+};
+$("lockBtn").onclick=()=>{
+  const x=state.logos[state.selectedLogo];
+  x.locked=!x.locked;renderLogos();updateLogoControls();saveBrowserSoon();
+};
+$("resetLogo").onclick=()=>{
+  const i=state.selectedLogo;
+  const x=state.logos[i];
+  if(x.locked)return;
+  const base=logoDefaults()[i];
+  state.logos[i]={...x,x:base.x,y:base.y,w:base.w,opacity:1};
+  renderLogos();updateLogoControls();saveBrowserSoon();
+};
+
+logoObjs.forEach(el=>{
+  el.addEventListener("pointerdown",logoPointerDown);
+  el.addEventListener("pointermove",pointerMove);
+  el.addEventListener("pointerup",pointerUp);
+  el.addEventListener("pointercancel",pointerUp);
+});
+[$("previewTitle"),$("previewSub"),$("previewInfo")].forEach(el=>{
+  el.addEventListener("pointerdown",textPointerDown);
+  el.addEventListener("pointermove",pointerMove);
+  el.addEventListener("pointerup",pointerUp);
+  el.addEventListener("pointercancel",pointerUp);
+});
+
+/* output */
+$("resolution").onchange=e=>{
+  state.resolution=Number(e.target.value);
+  renderUI();
+  saveBrowserSoon();
+};
+$("outputName").oninput=e=>{
+  state.outputName=e.target.value;
+  saveBrowserSoon();
+};
+$("pngBtn").onclick=exportPNG;
+$("pdfBtn").onclick=exportPDF;
+$("workSaveBtn").onclick=makeWorkFile;
+$("workLoadBtn").onclick=()=>$("workFile").click();
+$("workFile").onchange=e=>loadWorkFile(e.target.files?.[0]);
+$("browserSaveBtn").onclick=browserSave;
+$("resetAllBtn").onclick=()=>{
+  if(!confirm("웰컴보드 작업을 전부 초기화할까?"))return;
+  localStorage.removeItem("welcomeBoardMakerV10");
+  state=freshState();
+  for(let i=0;i<4;i++)$("logoFile"+i).value="";
+  render();
+};
+
+/* feedback */
+$("feedbackMail").href=
+  `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent("[웰컴보드 제작기 피드백]")}`+
+  `&body=${encodeURIComponent("발생한 문제 또는 개선 요청:\\n\\n사용 브라우저:\\n기타:\\n")}`;
+$("copyMail").onclick=async()=>{
+  try{
+    await navigator.clipboard.writeText(FEEDBACK_EMAIL);
+    alert("메일 주소를 복사했어.");
+  }catch(e){
+    prompt("아래 주소를 복사해줘.",FEEDBACK_EMAIL);
+  }
+};
+
+window.addEventListener("resize",fit);
+
+loadBrowser();
+render();
+})();
+</script>
+</body>
+</html>
