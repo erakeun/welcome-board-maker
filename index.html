@@ -26,6 +26,7 @@ href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-
   --page-w:1600px;
   --page-h:900px;
   --scale:.62;
+  --touch:44px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
@@ -37,15 +38,35 @@ body{
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 button:disabled,input:disabled{opacity:.48;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+summary:focus-visible,a:focus-visible{
+  outline:3px solid #2f86d1;outline-offset:2px
+}
 .app{min-height:100vh;display:grid;grid-template-columns:400px minmax(0,1fr)}
+.mobile-tabs{display:none}
 .sidebar{
   height:100vh;overflow:auto;position:sticky;top:0;z-index:20;
   background:#fff;border-right:1px solid var(--line);padding:22px 17px 35px
 }
 .head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.head-actions{display:flex;align-items:center;gap:7px}
 .head h1{font-size:24px;margin:0;letter-spacing:-.045em}
 .version{font-size:11px;padding:5px 9px;border-radius:999px;background:#edf3f8;color:#45647e}
+.new-work-btn{
+  min-height:var(--touch);border:1px solid var(--line);border-radius:9px;
+  background:#fff;color:#314555;padding:8px 10px;font-size:11px;font-weight:800
+}
 .desc{font-size:12px;color:var(--muted);line-height:1.55;margin:8px 0 16px}
+.restore-notice{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin:0 0 14px;padding:10px;border:1px solid #b8d8bf;border-radius:9px;
+  background:#eff9f1;color:#2d6840;font-size:11px;line-height:1.45
+}
+.restore-notice[hidden]{display:none}
+.restore-notice button{
+  flex:0 0 auto;min-height:var(--touch);border:1px solid #a9cdb2;border-radius:8px;
+  background:#fff;color:#2d6840;padding:6px 9px;font-size:10px;font-weight:800
+}
 .section{padding:16px 0;border-top:1px solid #edf0f2}
 .section h2{font-size:14px;margin:0 0 11px}
 .note{
@@ -62,6 +83,7 @@ input[type=text],select,textarea,.control{
   width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;
   padding:9px 10px;outline:none;color:var(--text)
 }
+input[type=text],input[type=file],select,textarea{min-height:var(--touch)}
 textarea{resize:vertical;min-height:72px;line-height:1.5}
 input:focus,select:focus,textarea:focus{
   border-color:#8db1d2;box-shadow:0 0 0 3px rgba(14,74,132,.08)
@@ -73,7 +95,7 @@ input:focus,select:focus,textarea:focus{
 }
 .template-btn.active{outline:2px solid var(--blue);outline-offset:-2px;color:var(--blue);font-weight:800}
 .template-thumb{
-  width:100%;aspect-ratio:16/9;border-radius:6px;background:center/cover no-repeat #eee;
+  display:block;width:100%;aspect-ratio:16/9;border-radius:6px;background:center/cover no-repeat #eee;
   border:1px solid #edf0f2;margin-bottom:5px
 }
 .template-name{display:block;font-size:10.5px;padding:1px 2px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -88,10 +110,10 @@ input:focus,select:focus,textarea:focus{
   margin:7px 0;font-size:11.5px;color:#56636f
 }
 .range output{text-align:right;font-variant-numeric:tabular-nums}
-input[type=range]{width:100%;accent-color:var(--blue)}
+input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
 .actions button,.slot-actions button{
-  border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 6px;
+  min-height:var(--touch);border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 6px;
   color:#465664;font-size:11px;font-weight:700
 }
 .built-logo-box{
@@ -113,14 +135,15 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 .logo-slot input{min-width:0}
 .logo-slot .slot-actions{margin:0}
 .slot-actions{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:5px}
-.slot-actions button{padding:5px 3px;font-size:9.5px}
+.slot-actions button{padding:7px 5px;font-size:10.5px}
 .btns{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.btn{border:0;border-radius:9px;padding:11px;font-size:12px;font-weight:800}
+.btn{min-height:var(--touch);border:0;border-radius:9px;padding:11px;font-size:12px;font-weight:800}
 .primary{background:var(--blue);color:#fff}
 .secondary{background:#e9eef2;color:#293845}
 .danger{background:#fff1f1;color:#a43434;border:1px solid #ffd2d2}
 .feedback-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .feedback-actions a,.feedback-actions button{
+  min-height:var(--touch);display:flex;align-items:center;justify-content:center;
   border:1px solid var(--line);background:#fff;color:#314555;border-radius:8px;
   padding:9px 7px;text-decoration:none;text-align:center;font-size:11px;font-weight:700
 }
@@ -139,11 +162,12 @@ input[type=range]{width:100%;accent-color:var(--blue)}
   color:#2d6f46;white-space:nowrap
 }
 .status.warn{background:#fff1d5;color:#8a6100}
+.status.block{background:#ffe8e8;color:#9a2f2f}
 .stage{
   flex:1;overflow:auto;display:grid;place-items:start center;padding:30px 35px 55px;
   background:radial-gradient(circle at 20% 10%,rgba(255,255,255,.88),transparent 32%),#e8edf1
 }
-.right-column{width:max-content;max-width:100%}
+.right-column{width:calc(var(--page-w)*var(--scale));max-width:100%}
 .shell{
   position:relative;width:calc(var(--page-w)*var(--scale));
   height:calc(var(--page-h)*var(--scale));margin:0 auto
@@ -183,6 +207,8 @@ input[type=range]{width:100%;accent-color:var(--blue)}
   left:var(--info-x,50%);top:var(--info-y,74%);width:76%;
   font-size:var(--info-size,30px);font-weight:500;line-height:1.55;letter-spacing:-.02em
 }
+.info-line{width:max-content;max-width:100%;margin:0 auto;white-space:pre-wrap}
+.info-line:empty{display:none}
 .logo-obj{
   position:absolute;left:50%;top:20%;width:18%;transform:translate(-50%,-50%);
   z-index:10;touch-action:none;user-select:none;cursor:grab
@@ -208,16 +234,53 @@ input[type=range]{width:100%;accent-color:var(--blue)}
   background:#edf3f8;color:#53728c;border-radius:999px;padding:4px 7px;font-size:9.5px
 }
 .patch ul{margin:8px 0 0;padding-left:17px}
+.patch{overflow-wrap:anywhere}
 .hidden-file{display:none}
+.advanced{
+  margin-top:12px;border:1px solid var(--line);border-radius:10px;background:#fafcfd
+}
+.advanced summary{
+  min-height:var(--touch);display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;padding:10px 12px;color:#314555;font-size:12px;font-weight:800
+}
+.advanced summary::after{content:"펼치기";font-size:10px;color:#6d7c88;font-weight:600}
+.advanced[open] summary::after{content:"접기"}
+.advanced-body{padding:0 11px 12px;border-top:1px solid #e9eef2}
+.preflight-box{
+  margin:10px 0;padding:10px 11px;border:1px solid #b8d8bf;border-radius:9px;
+  background:#eff9f1;color:#2d6840;font-size:11px;line-height:1.45
+}
+.preflight-box.warn{border-color:#ead9aa;background:#fffaf0;color:#765b1f}
+.preflight-box.block{border-color:#efb3b3;background:#fff2f2;color:#9a2f2f}
+.preflight-box ul{margin:6px 0 0;padding-left:18px}
+.export-progress{min-height:18px;margin-top:7px;color:#4b5c6a;font-size:11px}
 
 @media(max-width:1000px){
   .app{grid-template-columns:345px minmax(0,1fr)}
   .sidebar{padding-left:13px;padding-right:13px}
 }
 @media(max-width:760px){
-  .app{display:block}.sidebar{height:auto;position:relative}
-  .workspace{height:auto;min-height:80vh}.toolbar{position:sticky;top:0}
-  .stage{min-height:70vh}
+  .app{display:block}
+  .mobile-tabs{
+    position:sticky;top:0;z-index:100;display:grid;grid-template-columns:1fr 1fr;
+    gap:7px;padding:8px 12px;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line)
+  }
+  .mobile-tabs button{
+    min-height:var(--touch);border:1px solid var(--line);border-radius:9px;background:#f3f6f8;
+    color:#435463;font-size:12px;font-weight:800
+  }
+  .mobile-tabs button[aria-selected="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .sidebar{height:auto;position:relative;padding-top:16px}
+  .workspace{
+    position:absolute;left:-20000px;top:61px;visibility:hidden;
+    display:flex;width:100%;height:calc(100vh - 61px);min-height:620px
+  }
+  .app.mobile-preview .sidebar{display:none}
+  .app.mobile-preview .workspace{position:relative;left:auto;top:auto;visibility:visible}
+  .toolbar{position:static;min-height:64px;padding:8px 12px}
+  .help{max-width:70%;line-height:1.35}
+  .stage{min-height:0;padding:16px 10px 24px}
+  .right-column{max-width:100%}
   .logo-slot{grid-template-columns:1fr}
   .logo-slot .slot-actions{margin-top:4px}
 }
@@ -226,12 +289,23 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 
 <body>
 <div class="app">
-<aside class="sidebar">
-  <div class="head"><h1>웰컴보드 제작기</h1><span class="version">V1.0.4</span></div>
+<nav class="mobile-tabs" aria-label="모바일 화면 전환">
+  <button type="button" id="mobileEditorBtn" aria-selected="true" aria-controls="editorPanel">편집</button>
+  <button type="button" id="mobilePreviewBtn" aria-selected="false" aria-controls="previewPanel">미리보기</button>
+</nav>
+<aside class="sidebar" id="editorPanel">
+  <div class="head">
+    <h1>웰컴보드 제작기</h1>
+    <div class="head-actions"><span class="version" id="versionBadge"></span><button type="button" class="new-work-btn" id="newWorkBtn">새 작업</button></div>
+  </div>
   <p class="desc">
     ERICA 본관 1층 16:9 스크린용 웰컴보드 전용 제작기.
     행사명·일시·장소와 기관 로고를 배치하고 고해상도 이미지로 저장해. 한양대 흰색 로고는 기본 에셋에서 바로 선택할 수 있고, 상업적 이용 가능한 무료 글꼴만 제공해.
   </p>
+  <div class="restore-notice" id="restoreNotice" role="status" aria-live="polite" hidden>
+    <span id="restoreMessage"></span>
+    <button type="button" id="restorePreviousBtn" hidden>직전 작업 열기</button>
+  </div>
 
   <section class="section">
     <h2>1. 웰컴보드 디자인</h2>
@@ -245,57 +319,62 @@ input[type=range]{width:100%;accent-color:var(--blue)}
   <section class="section">
     <h2>2. 웰컴보드 내용</h2>
     <div class="field">
-      <label><strong>메인 행사명</strong></label>
+      <label for="titleInput"><strong>메인 행사명</strong></label>
       <textarea id="titleInput" rows="3"></textarea>
     </div>
     <div class="field">
-      <label><strong>보조 문구</strong><span>선택</span></label>
+      <label for="subInput"><strong>보조 문구</strong><span>선택</span></label>
       <input id="subInput" type="text" placeholder="예: 방문을 환영합니다">
     </div>
     <div class="field">
-      <label><strong>일시</strong></label>
+      <label for="dateInput"><strong>일시</strong></label>
       <input id="dateInput" type="text">
     </div>
     <div class="field">
-      <label><strong>장소</strong></label>
+      <label for="placeInput"><strong>장소</strong></label>
       <input id="placeInput" type="text">
     </div>
 
     <div class="actions">
-      <button type="button" id="exampleBtn">예시 다시 불러오기</button>
+      <button type="button" id="exampleBtn">예시 문구 넣기</button>
       <button type="button" id="clearTextBtn">문구 비우기</button>
     </div>
 
-    <div class="field" style="margin-top:12px">
-      <label><strong>글꼴</strong><span>상업적 이용 가능한 무료 폰트만</span></label>
-      <select id="fontSelect">
-        <option value="Pretendard">Pretendard</option>
-        <option value="SUIT">SUIT</option>
-        <option value="Noto Sans KR">Noto Sans KR</option>
-        <option value="Noto Serif KR">Noto Serif KR</option>
-      </select>
-      <div class="note" style="margin-top:6px">
-        네 폰트 모두 SIL Open Font License 계열로 배포되는 무료 글꼴이라,
-        웰컴보드·홍보물 등 상업적 결과물에도 사용할 수 있어.
+    <details class="advanced" id="textAdvanced">
+      <summary>고급 설정 · 글꼴/크기/세부 위치</summary>
+      <div class="advanced-body">
+        <div class="field" style="margin-top:12px">
+          <label for="fontSelect"><strong>글꼴</strong><span>상업적 이용 가능한 무료 폰트만</span></label>
+          <select id="fontSelect">
+            <option value="Pretendard">Pretendard</option>
+            <option value="SUIT">SUIT</option>
+            <option value="Noto Sans KR">Noto Sans KR</option>
+            <option value="Noto Serif KR">Noto Serif KR</option>
+          </select>
+          <div class="note" style="margin-top:6px">
+            네 폰트 모두 SIL Open Font License 계열로 배포되는 무료 글꼴이라,
+            웰컴보드·홍보물 등 상업적 결과물에도 사용할 수 있어.
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="range"><label for="titleSize">행사명 크기</label><input id="titleSize" type="range" min="38" max="108" value="66"><output id="titleSizeO" for="titleSize">66</output></div>
+          <div class="range"><label for="subSize">보조문구 크기</label><input id="subSize" type="range" min="14" max="60" value="25"><output id="subSizeO" for="subSize">25</output></div>
+          <div class="range"><label for="infoSize">상세정보 크기</label><input id="infoSize" type="range" min="18" max="56" value="30"><output id="infoSizeO" for="infoSize">30</output></div>
+        </div>
+
+        <div class="note" style="margin-top:12px">
+          아래 위치 슬라이더를 쓰거나, 오른쪽 미리보기의 <strong>행사명·보조문구·일시/장소를 직접 끌어서</strong> 옮길 수도 있어.
+        </div>
+
+        <div class="range"><label for="titleX">행사명 X</label><input id="titleX" type="range" min="10" max="90" value="50"><output id="titleXO" for="titleX">50%</output></div>
+        <div class="range"><label for="titleY">행사명 Y</label><input id="titleY" type="range" min="20" max="68" value="47"><output id="titleYO" for="titleY">47%</output></div>
+        <div class="range"><label for="subX">보조문구 X</label><input id="subX" type="range" min="10" max="90" value="50"><output id="subXO" for="subX">50%</output></div>
+        <div class="range"><label for="subY">보조문구 Y</label><input id="subY" type="range" min="30" max="78" value="60"><output id="subYO" for="subY">60%</output></div>
+        <div class="range"><label for="infoX">일시·장소 X</label><input id="infoX" type="range" min="10" max="90" value="50"><output id="infoXO" for="infoX">50%</output></div>
+        <div class="range"><label for="infoY">일시·장소 Y</label><input id="infoY" type="range" min="45" max="90" value="74"><output id="infoYO" for="infoY">74%</output></div>
       </div>
-    </div>
-
-    <div style="margin-top:12px">
-      <div class="range"><span>행사명 크기</span><input id="titleSize" type="range" min="38" max="108" value="66"><output id="titleSizeO">66</output></div>
-      <div class="range"><span>보조문구 크기</span><input id="subSize" type="range" min="14" max="60" value="25"><output id="subSizeO">25</output></div>
-      <div class="range"><span>상세정보 크기</span><input id="infoSize" type="range" min="18" max="56" value="30"><output id="infoSizeO">30</output></div>
-    </div>
-
-    <div class="note" style="margin-top:12px">
-      아래 위치 슬라이더를 쓰거나, 오른쪽 미리보기의 <strong>행사명·보조문구·일시/장소를 직접 끌어서</strong> 옮길 수도 있어.
-    </div>
-
-    <div class="range"><span>행사명 X</span><input id="titleX" type="range" min="10" max="90" value="50"><output id="titleXO">50%</output></div>
-    <div class="range"><span>행사명 Y</span><input id="titleY" type="range" min="20" max="68" value="47"><output id="titleYO">47%</output></div>
-    <div class="range"><span>보조문구 X</span><input id="subX" type="range" min="10" max="90" value="50"><output id="subXO">50%</output></div>
-    <div class="range"><span>보조문구 Y</span><input id="subY" type="range" min="30" max="78" value="60"><output id="subYO">60%</output></div>
-    <div class="range"><span>일시·장소 X</span><input id="infoX" type="range" min="10" max="90" value="50"><output id="infoXO">50%</output></div>
-    <div class="range"><span>일시·장소 Y</span><input id="infoY" type="range" min="45" max="90" value="74"><output id="infoYO">74%</output></div>
+    </details>
   </section>
 
   <section class="section">
@@ -307,7 +386,7 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 
     <div class="built-logo-box">
       <div class="field" style="margin-bottom:7px">
-        <label><strong>한양대 기본 로고 빠른 선택</strong><span>기관 로고 1에 삽입</span></label>
+        <label for="builtInLogo"><strong>한양대 기본 로고 빠른 선택</strong><span>기관 로고 1에 삽입</span></label>
         <select id="builtInLogo">
           <option value="none">직접 업로드 / 사용 안 함</option>
           <option value="hyu_white">한양대학교 가로형 · 흰색</option>
@@ -327,22 +406,22 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 
     <div class="logo-grid">
       <div class="logo-slot active" data-slot="0">
-        <strong>기관 로고 1</strong>
+        <label for="logoFile0"><strong>기관 로고 1</strong></label>
         <input type="file" id="logoFile0" accept="image/png,image/jpeg,image/webp,image/svg+xml">
         <div class="slot-actions"><button type="button" data-select="0">선택</button><button type="button" data-remove="0">삭제</button></div>
       </div>
       <div class="logo-slot" data-slot="1">
-        <strong>기관 로고 2</strong>
+        <label for="logoFile1"><strong>기관 로고 2</strong></label>
         <input type="file" id="logoFile1" accept="image/png,image/jpeg,image/webp,image/svg+xml">
         <div class="slot-actions"><button type="button" data-select="1">선택</button><button type="button" data-remove="1">삭제</button></div>
       </div>
       <div class="logo-slot" data-slot="2">
-        <strong>기관 로고 3</strong>
+        <label for="logoFile2"><strong>기관 로고 3</strong></label>
         <input type="file" id="logoFile2" accept="image/png,image/jpeg,image/webp,image/svg+xml">
         <div class="slot-actions"><button type="button" data-select="2">선택</button><button type="button" data-remove="2">삭제</button></div>
       </div>
       <div class="logo-slot" data-slot="3">
-        <strong>기관 로고 4</strong>
+        <label for="logoFile3"><strong>기관 로고 4</strong></label>
         <input type="file" id="logoFile3" accept="image/png,image/jpeg,image/webp,image/svg+xml">
         <div class="slot-actions"><button type="button" data-select="3">선택</button><button type="button" data-remove="3">삭제</button></div>
       </div>
@@ -353,31 +432,34 @@ input[type=range]{width:100%;accent-color:var(--blue)}
       <button type="button" id="clearLogos">기관 로고 전체 삭제</button>
     </div>
 
-    <div style="margin-top:11px">
-      <div class="field">
-        <label><strong>현재 선택 로고</strong><span id="selectedLabel">기관 로고 1</span></label>
+    <details class="advanced" id="logoAdvanced">
+      <summary>고급 설정 · 로고 위치/크기</summary>
+      <div class="advanced-body" style="padding-top:11px">
+        <div class="field">
+          <label for="logoX"><strong>현재 선택 로고</strong><span id="selectedLabel">기관 로고 1</span></label>
+        </div>
+        <div class="range"><label for="logoX">가로 위치</label><input id="logoX" type="range" min="3" max="97" value="38"><output id="logoXO" for="logoX">38%</output></div>
+        <div class="range"><label for="logoY">세로 위치</label><input id="logoY" type="range" min="4" max="45" value="20"><output id="logoYO" for="logoY">20%</output></div>
+        <div class="range"><label for="logoSize">크기</label><input id="logoSize" type="range" min="5" max="42" value="18"><output id="logoSizeO" for="logoSize">18%</output></div>
+        <div class="range"><label for="logoOpacity">투명도</label><input id="logoOpacity" type="range" min="10" max="100" value="100"><output id="logoOpacityO" for="logoOpacity">100%</output></div>
+        <div class="actions">
+          <button type="button" id="lockBtn">🔒 위치 잠금</button>
+          <button type="button" id="resetLogo">선택 로고 초기화</button>
+        </div>
       </div>
-      <div class="range"><span>가로 위치</span><input id="logoX" type="range" min="3" max="97" value="38"><output id="logoXO">38%</output></div>
-      <div class="range"><span>세로 위치</span><input id="logoY" type="range" min="4" max="45" value="20"><output id="logoYO">20%</output></div>
-      <div class="range"><span>크기</span><input id="logoSize" type="range" min="5" max="42" value="18"><output id="logoSizeO">18%</output></div>
-      <div class="range"><span>투명도</span><input id="logoOpacity" type="range" min="10" max="100" value="100"><output id="logoOpacityO">100%</output></div>
-      <div class="actions">
-        <button type="button" id="lockBtn">🔒 위치 잠금</button>
-        <button type="button" id="resetLogo">선택 로고 초기화</button>
-      </div>
-    </div>
+    </details>
   </section>
 
   <section class="section">
     <h2>4. 출력 · 저장</h2>
 
     <div class="field">
-      <label><strong>출력 파일명</strong></label>
+      <label for="outputName"><strong>출력 파일명</strong></label>
       <input id="outputName" type="text" value="ERICA 본관 1층 웰컴보드">
     </div>
 
     <div class="field">
-      <label><strong>PNG 출력 화질</strong></label>
+      <label for="resolution"><strong>PNG 출력 화질</strong></label>
       <select id="resolution">
         <option value="3840">4K · 3840×2160 · 고화질</option>
         <option value="5760">6K · 5760×3240 · 초고화질</option>
@@ -389,19 +471,25 @@ input[type=range]{width:100%;accent-color:var(--blue)}
         실제 캔버스를 정확히 3840×2160 / 5760×3240 / 7680×4320으로 생성해.
       </div>
       <div class="field" style="margin-top:8px">
-        <label><strong>예상 출력 크기</strong><span id="expectedResolution">7680×4320 px</span></label>
+        <label for="resolution"><strong>예상 출력 크기</strong><span id="expectedResolution">7680×4320 px</span></label>
       </div>
     </div>
 
-    <div class="btns">
-      <button class="btn primary" id="pngBtn">PNG 저장</button>
-      <button class="btn primary" id="pdfBtn">PDF 저장</button>
-      <button class="btn secondary" id="workSaveBtn">작업파일 저장</button>
-      <button class="btn secondary" id="workLoadBtn">작업파일 불러오기</button>
-      <button class="btn secondary" id="browserSaveBtn">브라우저 저장</button>
-      <button class="btn danger" id="resetAllBtn">전체 초기화</button>
+    <div class="preflight-box" id="preflightBox" role="status" aria-live="polite">
+      <strong id="preflightTitle">레이아웃 검사 중</strong>
+      <ul id="preflightIssues" hidden></ul>
     </div>
-    <input class="hidden-file" id="workFile" type="file" accept=".json,.welcome.json,application/json">
+
+    <div class="btns">
+      <button type="button" class="btn primary" id="pngBtn">PNG 저장</button>
+      <button type="button" class="btn primary" id="pdfBtn">PDF 저장</button>
+      <button type="button" class="btn secondary" id="workSaveBtn">작업파일 저장</button>
+      <button type="button" class="btn secondary" id="workLoadBtn">작업파일 불러오기</button>
+      <button type="button" class="btn secondary" id="browserSaveBtn">브라우저 저장</button>
+      <button type="button" class="btn danger" id="resetAllBtn">전체 초기화</button>
+    </div>
+    <div class="export-progress" id="exportProgress" role="status" aria-live="polite"></div>
+    <input class="hidden-file" id="workFile" type="file" aria-label="작업파일 선택" accept=".json,.welcome.json,application/json">
   </section>
 
   <section class="section">
@@ -413,13 +501,13 @@ input[type=range]{width:100%;accent-color:var(--blue)}
   </section>
 </aside>
 
-<main class="workspace">
+<main class="workspace" id="previewPanel">
   <div class="toolbar">
     <div class="help">
       16:9 웰컴보드 전용 · 글자와 로고를 미리보기에서 직접 끌어서 이동할 수 있어.
       <span class="screen-badge" id="resolutionBadge">8K PNG 권장</span>
     </div>
-    <span class="status" id="status">레이아웃 정상</span>
+    <span class="status" id="status" role="status" aria-live="polite">레이아웃 정상</span>
   </div>
 
   <div class="stage" id="stage">
@@ -436,7 +524,10 @@ input[type=range]{width:100%;accent-color:var(--blue)}
           <div class="content">
             <div class="text-block main-title" id="previewTitle" data-text="title"></div>
             <div class="text-block sub" id="previewSub" data-text="sub"></div>
-            <div class="text-block info" id="previewInfo" data-text="info"></div>
+            <div class="text-block info" id="previewInfo" data-text="info">
+              <div class="info-line" id="previewDate"></div>
+              <div class="info-line" id="previewPlace"></div>
+            </div>
           </div>
 
           <div class="logo-obj" id="logoObj0" data-index="0"><img id="logoImg0" alt=""></div>
@@ -449,25 +540,15 @@ input[type=range]{width:100%;accent-color:var(--blue)}
       <div class="patch">
         <div class="patch-head">
           <strong>웰컴보드 제작기 업데이트</strong>
-          <span class="patch-current">V1.0.4 · 2026.08.26</span>
+          <span class="patch-current" id="patchVersion"></span>
         </div>
         <ul>
-          <li>웰컴보드 템플릿을 2종에서 8종으로 확대</li>
-          <li>신규 골드·다크 계열 템플릿 6종 추가</li>
-          <li>템플릿 선택 UI를 동적 카드 방식으로 변경</li>
-          <li>가짜 8K 출력 버그 수정: 미리보기 transform을 제거한 독립 캔버스에서 정확한 픽셀로 렌더링</li>
-          <li>출력 화질을 4K / 6K / 8K로 재구성하고 기본값을 8K로 상향</li>
-          <li>저장 직전 실제 캔버스 픽셀 검증 기능 추가</li>
-          <li>기관 로고 1~4 입력 영역을 2열에서 세로 1열로 변경</li>
-          <li>상업적 이용 가능한 무료 글꼴 4종 선택 기능 추가: Pretendard / SUIT / Noto Sans KR / Noto Serif KR</li>
-          <li>한양대 흰색 기본 로고 4종 빠른 선택 기능 추가</li>
-          <li>안내문 제작기에서 웰컴보드 기능을 별도 제작기로 분리</li>
-          <li>브라운·블랙 웰컴보드 2종 지원</li>
-          <li>4K 기본 / 8K 선택 가능한 고해상도 PNG 출력</li>
-          <li>미리보기의 로고 선택 테두리 제거</li>
-          <li>행사명·보조문구·일시/장소를 각각 X/Y 이동 및 직접 드래그 가능</li>
-          <li>보조문구 글자 크기 조절 추가</li>
-          <li>기관 로고 최대 4개 업로드·자동 정렬·개별 이동·잠금 지원</li>
+          <li>모바일·태블릿에서 편집/미리보기를 즉시 전환하는 현장 대응 UI</li>
+          <li>잘림·안전 여백·요소 충돌을 확인하고 심각한 문제는 출력 전에 차단</li>
+          <li>고급 위치·크기 설정을 접어 핵심 입력과 출력 흐름을 간결하게 정리</li>
+          <li>자동 복원 안내와 기존 저장본을 보존하는 새 작업 흐름 추가</li>
+          <li>실제 템플릿 경로 및 경량 썸네일 적용으로 404와 초기 전송량 개선</li>
+          <li>PNG/PDF 공통 출력 잠금·진행 상태와 키보드/터치 접근성 강화</li>
         </ul>
       </div>
     </div>
@@ -480,17 +561,22 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 "use strict";
 
 const $=id=>document.getElementById(id);
+const APP_VERSION="1.1.0";
+const RELEASE_NAME="FIELD STABLE";
+const RELEASE_DATE="2026.09.03";
+const STORAGE_KEY="welcomeBoardMakerV10";
+const PREVIOUS_STORAGE_KEY="welcomeBoardMakerV10Previous";
 const FEEDBACK_EMAIL="keun0810@hanyang.ac.kr";
 
 const TEMPLATES=[
-  {id:"brown",name:"브라운 클래식",file:"templates/welcome_brown.png",legacy:"templates/template_13.png"},
-  {id:"black",name:"블랙 클래식",file:"templates/welcome_black.png",legacy:"templates/template_14.png"},
-  {id:"classic_gold",name:"클래식 골드 프레임",file:"templates/welcome_template_03_classic_gold_frame.png"},
-  {id:"gold_wave",name:"골드 웨이브 스테이지",file:"templates/welcome_template_04_gold_wave_stage.png"},
-  {id:"modern_gold",name:"모던 골드 패널",file:"templates/welcome_template_05_modern_gold_panel.png"},
-  {id:"brown_stage",name:"브라운 스테이지 프레임",file:"templates/welcome_template_06_brown_stage_frame.png"},
-  {id:"black_display",name:"블랙 골드 디스플레이",file:"templates/welcome_template_07_black_gold_display_frame.png"},
-  {id:"dark_gold",name:"다크 골드 엣지",file:"templates/welcome_template_08_dark_gold_edge_frame.png"}
+  {id:"brown",name:"브라운 클래식",file:"templates/template_13.png",thumb:"templates/thumbs/template_13.jpg"},
+  {id:"black",name:"블랙 클래식",file:"templates/template_14.png",thumb:"templates/thumbs/template_14.jpg"},
+  {id:"classic_gold",name:"클래식 골드 프레임",file:"templates/welcome_template_03_classic_gold_frame.png",thumb:"templates/thumbs/welcome_template_03_classic_gold_frame.jpg"},
+  {id:"gold_wave",name:"골드 웨이브 스테이지",file:"templates/welcome_template_04_gold_wave_stage.png",thumb:"templates/thumbs/welcome_template_04_gold_wave_stage.jpg"},
+  {id:"modern_gold",name:"모던 골드 패널",file:"templates/welcome_template_05_modern_gold_panel.png",thumb:"templates/thumbs/welcome_template_05_modern_gold_panel.jpg"},
+  {id:"brown_stage",name:"브라운 스테이지 프레임",file:"templates/welcome_template_06_brown_stage_frame.png",thumb:"templates/thumbs/welcome_template_06_brown_stage_frame.jpg"},
+  {id:"black_display",name:"블랙 골드 디스플레이",file:"templates/welcome_template_07_black_gold_display_frame.png",thumb:"templates/thumbs/welcome_template_07_black_gold_display_frame.jpg"},
+  {id:"dark_gold",name:"다크 골드 엣지",file:"templates/welcome_template_08_dark_gold_edge_frame.png",thumb:"templates/thumbs/welcome_template_08_dark_gold_edge_frame.jpg"}
 ];
 
 const BUILT_IN_LOGOS={
@@ -501,10 +587,10 @@ const BUILT_IN_LOGOS={
 };
 
 const EXAMPLE={
-  title:"한양대 ERICA-겐트대학교 글로벌캠퍼스\nMOU 협약식",
-  sub:"",
-  date:"2023.11.08.(수) 14:30",
-  place:"본관 2층 프라임컨퍼런스홀"
+  title:"[예시] 방문단 환영",
+  sub:"방문을 환영합니다",
+  date:"YYYY. MM. DD. HH:MM",
+  place:"행사 장소"
 };
 
 const logoDefaults=()=>[
@@ -516,10 +602,10 @@ const logoDefaults=()=>[
 
 const freshState=()=>({
   template:"brown",
-  title:EXAMPLE.title,
-  sub:EXAMPLE.sub,
-  date:EXAMPLE.date,
-  place:EXAMPLE.place,
+  title:"",
+  sub:"",
+  date:"",
+  place:"",
   font:"Pretendard",
 
   titleSize:66,
@@ -545,7 +631,9 @@ let state=freshState();
 let drag=null;
 let templateReady=true;
 let saveTimer=null;
-let triedLegacyPath=false;
+let lastPreflight={blocking:[],warnings:[]};
+let exportBusy=false;
+let restoredSavedAt="";
 
 const page=$("page");
 const stage=$("stage");
@@ -575,13 +663,8 @@ function preferredTemplatePath(){
   return currentTemplate().file;
 }
 
-function legacyTemplatePath(){
-  return currentTemplate().legacy || "";
-}
-
 function renderTemplate(){
-  templateReady=true;
-  triedLegacyPath=false;
+  templateReady=false;
   $("templateMissing").style.display="none";
   $("fallback").style.display="none";
   $("fallback").classList.toggle("black",state.template!=="brown");
@@ -593,23 +676,19 @@ function renderTemplate(){
     templateReady=true;
     $("templateMissing").style.display="none";
     $("fallback").style.display="none";
+    checkLayout();
   };
 
   img.onerror=()=>{
-    const legacy=legacyTemplatePath();
-    if(!triedLegacyPath && legacy){
-      triedLegacyPath=true;
-      img.src=legacy+"?v="+Date.now();
-      return;
-    }
     templateReady=false;
     img.style.display="none";
     $("fallback").style.display="block";
     $("templateMissing").style.display="block";
     $("templateMissing").textContent="템플릿 파일 없음 · "+preferredTemplatePath();
+    checkLayout();
   };
 
-  img.src=preferredTemplatePath()+"?v="+Date.now();
+  img.src=preferredTemplatePath();
 }
 
 function renderContent(){
@@ -617,10 +696,8 @@ function renderContent(){
 
   $("previewTitle").textContent=state.title;
   $("previewSub").textContent=state.sub;
-  $("previewInfo").textContent=[
-    state.date?`일시 : ${state.date}`:"",
-    state.place?`장소 : ${state.place}`:""
-  ].filter(Boolean).join("\n");
+  $("previewDate").textContent=state.date?`일시 : ${state.date}`:"";
+  $("previewPlace").textContent=state.place?`장소 : ${state.place}`:"";
 
   page.style.setProperty("--title-size",state.titleSize+"px");
   page.style.setProperty("--sub-size",state.subSize+"px");
@@ -654,6 +731,7 @@ function renderLogos(){
       img.removeAttribute("src");
     }
   }
+  requestAnimationFrame(checkLayout);
 }
 
 function buildTemplateGrid(){
@@ -665,6 +743,7 @@ function buildTemplateGrid(){
     b.type="button";
     b.className="template-btn"+(item.id===state.template?" active":"");
     b.dataset.template=item.id;
+    b.setAttribute("aria-pressed",item.id===state.template?"true":"false");
 
     const no=document.createElement("span");
     no.className="template-no";
@@ -672,7 +751,8 @@ function buildTemplateGrid(){
 
     const thumb=document.createElement("span");
     thumb.className="template-thumb";
-    thumb.style.backgroundImage=`url("${item.file}")`;
+    thumb.style.backgroundImage=`url("${item.thumb}")`;
+    thumb.setAttribute("aria-hidden","true");
 
     const name=document.createElement("span");
     name.className="template-name";
@@ -695,7 +775,9 @@ function buildTemplateGrid(){
 
 function renderTemplateButtons(){
   document.querySelectorAll("[data-template]").forEach(b=>{
-    b.classList.toggle("active",b.dataset.template===state.template);
+    const active=b.dataset.template===state.template;
+    b.classList.toggle("active",active);
+    b.setAttribute("aria-pressed",active?"true":"false");
   });
 }
 
@@ -726,6 +808,8 @@ function updateLogoControls(){
 }
 
 function renderUI(){
+  $("versionBadge").textContent=`V${APP_VERSION}`;
+  $("patchVersion").textContent=`V${APP_VERSION} · ${RELEASE_NAME} · ${RELEASE_DATE}`;
   $("titleInput").value=state.title;
   $("subInput").value=state.sub;
   $("fontSelect").value=state.font||"Pretendard";
@@ -762,6 +846,24 @@ function renderUI(){
   updateLogoControls();
 }
 
+function showMobilePanel(panel){
+  const preview=panel==="preview";
+  document.querySelector(".app").classList.toggle("mobile-preview",preview);
+  $("mobileEditorBtn").setAttribute("aria-selected",preview?"false":"true");
+  $("mobilePreviewBtn").setAttribute("aria-selected",preview?"true":"false");
+  if(window.innerWidth<=760){
+    $("editorPanel").setAttribute("aria-hidden",preview?"true":"false");
+    $("previewPanel").setAttribute("aria-hidden",preview?"false":"true");
+  }else{
+    $("editorPanel").removeAttribute("aria-hidden");
+    $("previewPanel").removeAttribute("aria-hidden");
+  }
+  requestAnimationFrame(()=>{
+    fit();
+    checkLayout();
+  });
+}
+
 function render(){
   buildTemplateGrid();
   renderTemplate();
@@ -774,31 +876,116 @@ function render(){
 }
 
 function fit(){
-  const aw=Math.max(280,stage.clientWidth-70);
-  const ah=Math.max(380,stage.clientHeight-70);
+  const style=getComputedStyle(stage);
+  const padX=(Number.parseFloat(style.paddingLeft)||0)+(Number.parseFloat(style.paddingRight)||0);
+  const padY=(Number.parseFloat(style.paddingTop)||0)+(Number.parseFloat(style.paddingBottom)||0);
+  const aw=Math.max(160,stage.clientWidth-padX);
+  const ah=Math.max(220,stage.clientHeight-padY);
   let s=Math.min(aw/1600,ah/900,.92);
-  s=Math.max(.23,s);
+  s=Math.max(.1,s);
   document.documentElement.style.setProperty("--scale",s.toFixed(4));
   shell.style.width=(1600*s)+"px";
   shell.style.height=(900*s)+"px";
 }
 
-function checkLayout(){
-  const st=$("status");
-  const el=$("previewTitle");
-  const line=parseFloat(getComputedStyle(el).lineHeight)||state.titleSize*1.15;
-  const tooLong=el.scrollHeight>line*3.5;
+function rectOutside(inner,outer,tolerance=.75){
+  return inner.left<outer.left-tolerance || inner.top<outer.top-tolerance ||
+    inner.right>outer.right+tolerance || inner.bottom>outer.bottom+tolerance;
+}
 
-  if(!templateReady){
+function rectsOverlap(a,b,tolerance=2){
+  return Math.min(a.right,b.right)-Math.max(a.left,b.left)>tolerance &&
+    Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>tolerance;
+}
+
+function checkLayout(){
+  const blocking=[];
+  const warnings=[];
+  const pageRect=page.getBoundingClientRect();
+  const safeRect={
+    left:pageRect.left+pageRect.width*.03,
+    right:pageRect.right-pageRect.width*.03,
+    top:pageRect.top+pageRect.height*.04,
+    bottom:pageRect.bottom-pageRect.height*.04
+  };
+  const items=[];
+  const add=(label,el)=>{
+    if(!el || !el.textContent.trim())return;
+    const rect=el.getBoundingClientRect();
+    if(rect.width>0 && rect.height>0)items.push({label,rect});
+  };
+
+  add("메인 행사명",$("previewTitle"));
+  add("보조 문구",$("previewSub"));
+  add("일시",$("previewDate"));
+  add("장소",$("previewPlace"));
+  state.logos.forEach((logo,index)=>{
+    if(!logo.data)return;
+    const rect=logoObjs[index].getBoundingClientRect();
+    if(rect.width>0 && rect.height>0)items.push({label:`기관 로고 ${index+1}`,rect});
+  });
+
+  if(!templateReady)blocking.push("배경 템플릿을 불러오지 못함");
+  if(!state.title.trim())warnings.push("메인 행사명이 비어 있음");
+
+  items.forEach(item=>{
+    if(rectOutside(item.rect,pageRect)){
+      blocking.push(`${item.label}이 화면 밖으로 잘림`);
+    }else if(rectOutside(item.rect,safeRect)){
+      warnings.push(`${item.label}이 안전 여백 3%/4%를 벗어남`);
+    }
+  });
+
+  for(let i=0;i<items.length;i++){
+    for(let j=i+1;j<items.length;j++){
+      if(rectsOverlap(items[i].rect,items[j].rect)){
+        blocking.push(`${items[i].label} ↔ ${items[j].label} 충돌`);
+      }
+    }
+  }
+
+  lastPreflight={
+    blocking:[...new Set(blocking)],
+    warnings:[...new Set(warnings)]
+  };
+  renderPreflight();
+  return lastPreflight;
+}
+
+function renderPreflight(){
+  const st=$("status");
+  const box=$("preflightBox");
+  const title=$("preflightTitle");
+  const list=$("preflightIssues");
+  const issues=[...lastPreflight.blocking,...lastPreflight.warnings];
+  list.innerHTML="";
+  issues.forEach(issue=>{
+    const li=document.createElement("li");
+    li.textContent=issue;
+    list.appendChild(li);
+  });
+  list.hidden=!issues.length;
+
+  if(lastPreflight.blocking.length){
+    st.className="status block";
+    st.textContent=`출력 차단 · ${lastPreflight.blocking[0]}`;
+    box.className="preflight-box block";
+    title.textContent=`출력 전 수정 필요 · ${lastPreflight.blocking.length}건`;
+  }else if(lastPreflight.warnings.length){
     st.className="status warn";
-    st.textContent="배경 asset 없음 · 임시 배경";
-  }else if(tooLong){
-    st.className="status warn";
-    st.textContent="행사명이 너무 김";
+    st.textContent=`확인 필요 · ${lastPreflight.warnings[0]}`;
+    box.className="preflight-box warn";
+    title.textContent=`출력 가능 · 확인 사항 ${lastPreflight.warnings.length}건`;
   }else{
     st.className="status";
     st.textContent="레이아웃 정상";
+    box.className="preflight-box";
+    title.textContent="레이아웃 정상 · 출력 가능";
   }
+}
+
+function preflightMessage(){
+  return lastPreflight.blocking.map(x=>`• ${x}`).join("\n");
 }
 
 function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
@@ -806,35 +993,96 @@ function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
 function saveBrowserSoon(){
   clearTimeout(saveTimer);
   saveTimer=setTimeout(()=>{
-    try{
-      const copy=JSON.parse(JSON.stringify(state));
-      copy.logos=copy.logos.map(x=>({...x,data:""}));
-      localStorage.setItem("welcomeBoardMakerV10",JSON.stringify(copy));
-    }catch(e){}
+    saveBrowserNow(false);
   },160);
 }
 
-function browserSave(){
+function browserPayload(){
+  const copy=JSON.parse(JSON.stringify(state));
+  copy.logos=copy.logos.map(x=>({...x,data:""}));
+  copy._savedAt=new Date().toISOString();
+  copy._appVersion=APP_VERSION;
+  return copy;
+}
+
+function saveBrowserNow(showMessage=true){
   try{
-    const copy=JSON.parse(JSON.stringify(state));
-    copy.logos=copy.logos.map(x=>({...x,data:""}));
-    localStorage.setItem("welcomeBoardMakerV10",JSON.stringify(copy));
-    alert("현재 설정을 브라우저에 저장했어.\n업로드한 기관 로고 이미지는 저장 대상에서 제외돼.");
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(browserPayload()));
+    if(showMessage)alert("현재 설정을 브라우저에 저장했어.\n업로드한 기관 로고 이미지는 저장 대상에서 제외돼.");
+    return true;
   }catch(e){
-    alert("브라우저 저장에 실패했어.");
+    if(showMessage)alert("브라우저 저장에 실패했어.");
+    return false;
   }
+}
+
+function applySavedState(x){
+  const b=freshState();
+  const clean={...x};
+  delete clean._savedAt;
+  delete clean._appVersion;
+  state={...b,...clean};
+  const base=logoDefaults();
+  state.logos=(clean.logos||base).slice(0,4).map((item,i)=>({...base[i],...item,data:""}));
+  while(state.logos.length<4)state.logos.push(base[state.logos.length]);
+}
+
+function formatSavedAt(value){
+  if(!value)return "저장 시각 정보 없음";
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime()))return "저장 시각 정보 없음";
+  return new Intl.DateTimeFormat("ko-KR",{dateStyle:"medium",timeStyle:"short"}).format(date);
+}
+
+function showRestoreNotice(message,showPrevious=false){
+  $("restoreMessage").textContent=message;
+  $("restoreNotice").hidden=false;
+  $("restorePreviousBtn").hidden=!showPrevious;
 }
 
 function loadBrowser(){
   try{
-    const x=JSON.parse(localStorage.getItem("welcomeBoardMakerV10")||"null");
-    if(!x)return;
-    const b=freshState();
-    state={...b,...x};
-    const base=logoDefaults();
-    state.logos=(x.logos||base).map((item,i)=>({...base[i],...item,data:""}));
-    while(state.logos.length<4)state.logos.push(base[state.logos.length]);
+    const x=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+    if(!x)return false;
+    restoredSavedAt=x._savedAt||"";
+    applySavedState(x);
+    return true;
+  }catch(e){return false}
+}
+
+function startNewWork(){
+  if(!confirm("새 작업을 시작할까?\n현재 자동 저장본은 '직전 작업'으로 보관돼."))return;
+  let keptPrevious=false;
+  try{
+    const current=localStorage.getItem(STORAGE_KEY);
+    if(current){
+      localStorage.setItem(PREVIOUS_STORAGE_KEY,current);
+      keptPrevious=true;
+    }
   }catch(e){}
+  state=freshState();
+  for(let i=0;i<4;i++)$("logoFile"+i).value="";
+  render();
+  saveBrowserNow(false);
+  showRestoreNotice(keptPrevious?"새 작업 시작됨 · 직전 작업은 별도로 보관했어.":"새 작업을 시작했어.",keptPrevious);
+  showMobilePanel("editor");
+  $("titleInput").focus();
+}
+
+function restorePreviousWork(){
+  try{
+    const x=JSON.parse(localStorage.getItem(PREVIOUS_STORAGE_KEY)||"null");
+    if(!x){
+      alert("보관된 직전 작업이 없어.");
+      return;
+    }
+    applySavedState(x);
+    render();
+    saveBrowserNow(false);
+    showRestoreNotice(`직전 작업을 열었어 · ${formatSavedAt(x._savedAt)}`,false);
+  }catch(e){
+    alert("직전 작업을 읽을 수 없어.");
+  }
 }
 
 function selectLogo(i){
@@ -868,6 +1116,7 @@ function loadBuiltInLogoToSlot1(key){
         autoArrange(false);
         renderLogos();
         updateLogoControls();
+        checkLayout();
         saveBrowserSoon();
       };
       reader.readAsDataURL(blob);
@@ -891,6 +1140,7 @@ function loadLogo(i,file){
     autoArrange(false);
     renderLogos();
     updateLogoControls();
+    checkLayout();
     saveBrowserSoon();
   };
   r.readAsDataURL(file);
@@ -902,6 +1152,7 @@ function removeLogo(i){
   if(input)input.value="";
   renderLogos();
   updateLogoControls();
+  checkLayout();
   saveBrowserSoon();
 }
 
@@ -914,6 +1165,7 @@ function clearLogos(){
   state.selectedLogo=0;
   renderLogos();
   updateLogoControls();
+  checkLayout();
   saveBrowserSoon();
 }
 
@@ -943,6 +1195,7 @@ function autoArrange(showMessage=true){
 
   renderLogos();
   updateLogoControls();
+  checkLayout();
   saveBrowserSoon();
 }
 
@@ -953,6 +1206,7 @@ function loadExample(){
   state.place=EXAMPLE.place;
   renderContent();
   renderUI();
+  checkLayout();
   saveBrowserSoon();
 }
 
@@ -970,6 +1224,7 @@ function bindRange(id,key,out,suffix=""){
     state[key]=Number(e.target.value);
     $(out).value=Math.round(state[key])+suffix;
     renderContent();
+    checkLayout();
     saveBrowserSoon();
   });
 }
@@ -1016,6 +1271,7 @@ function pointerMove(e){
     item.y=clamp(y,4,48);
     renderLogos();
     updateLogoControls();
+    checkLayout();
     return;
   }
 
@@ -1032,19 +1288,21 @@ function pointerMove(e){
   }
   renderContent();
   renderUI();
+  checkLayout();
 }
 
 function pointerUp(){
   if(!drag)return;
   drag=null;
   page.classList.remove("dragging");
+  checkLayout();
   saveBrowserSoon();
 }
 
 function makeWorkFile(){
   const payload={
     app:"welcome-board-maker",
-    version:"1.0",
+    version:APP_VERSION,
     savedAt:new Date().toISOString(),
     state:JSON.parse(JSON.stringify(state))
   };
@@ -1067,7 +1325,7 @@ function loadWorkFile(file){
       const b=freshState();
       const base=logoDefaults();
       state={...b,...x};
-      state.logos=(x.logos||base).map((item,i)=>({...base[i],...item}));
+      state.logos=(x.logos||base).slice(0,4).map((item,i)=>({...base[i],...item}));
       while(state.logos.length<4)state.logos.push(base[state.logos.length]);
       render();
     }catch(e){
@@ -1081,6 +1339,13 @@ function loadWorkFile(file){
 
 async function exportCanvas(){
   await document.fonts.ready;
+
+  const inspection=checkLayout();
+  if(inspection.blocking.length){
+    const error=new Error("출력 전 수정 필요:\n"+preflightMessage());
+    error.code="PREFLIGHT_BLOCKED";
+    throw error;
+  }
 
   const targetWidth=Number(state.resolution)||7680;
   const targetHeight=Math.round(targetWidth*9/16);
@@ -1143,9 +1408,30 @@ async function exportCanvas(){
   }
 }
 
+function setExportBusy(busy,kind=""){
+  exportBusy=busy;
+  $("pngBtn").disabled=busy;
+  $("pdfBtn").disabled=busy;
+  $("pngBtn").textContent=busy && kind==="PNG"?"PNG 생성 중…":"PNG 저장";
+  $("pdfBtn").textContent=busy && kind==="PDF"?"PDF 생성 중…":"PDF 저장";
+  document.body.setAttribute("aria-busy",busy?"true":"false");
+  if(busy)$("exportProgress").textContent=`${kind} 고해상도 파일을 생성하고 있어. 잠시만 기다려줘.`;
+}
+
+function beginExport(kind){
+  if(exportBusy)return false;
+  const inspection=checkLayout();
+  if(inspection.blocking.length){
+    $("exportProgress").textContent=`${kind} 출력 차단 · 위 사전 점검 항목을 수정해줘.`;
+    $("preflightBox").scrollIntoView({behavior:"smooth",block:"center"});
+    return false;
+  }
+  setExportBusy(true,kind);
+  return true;
+}
+
 async function exportPNG(){
-  const b=$("pngBtn");
-  b.disabled=true;b.textContent="생성 중...";
+  if(!beginExport("PNG"))return;
   try{
     const c=await exportCanvas();
     const a=document.createElement("a");
@@ -1154,17 +1440,22 @@ async function exportPNG(){
     document.body.appendChild(a);a.click();a.remove();
     $("status").className="status";
     $("status").textContent=`PNG ${c.width}×${c.height} 생성 완료`;
+    $("exportProgress").textContent=`PNG ${c.width}×${c.height} 생성 완료`;
   }catch(e){
-    console.error(e);
-    alert("PNG 생성 중 오류가 났어.\n"+(e?.message||"브라우저 메모리 부족 가능성 있음")+"\n\n8K가 너무 무거운 환경이면 6K 또는 4K로 낮춰서 다시 시도해봐.");
+    if(e?.code==="PREFLIGHT_BLOCKED"){
+      $("exportProgress").textContent="PNG 출력 차단 · 사전 점검 항목을 수정해줘.";
+      alert(e.message);
+    }else{
+      console.error(e);
+      alert("PNG 생성 중 오류가 났어.\n"+(e?.message||"브라우저 메모리 부족 가능성 있음")+"\n\n8K가 너무 무거운 환경이면 6K 또는 4K로 낮춰서 다시 시도해봐.");
+    }
   }finally{
-    b.disabled=false;b.textContent="PNG 저장";
+    setExportBusy(false);
   }
 }
 
 async function exportPDF(){
-  const b=$("pdfBtn");
-  b.disabled=true;b.textContent="생성 중...";
+  if(!beginExport("PDF"))return;
   try{
     const c=await exportCanvas();
     const {jsPDF}=window.jspdf;
@@ -1177,11 +1468,19 @@ async function exportPDF(){
     });
     pdf.addImage(c.toDataURL("image/png"),"PNG",0,0,338.67,190.5,undefined,"FAST");
     pdf.save(safeName(state.outputName)+".pdf");
+    $("status").className="status";
+    $("status").textContent=`PDF 생성 완료 · 원본 ${c.width}×${c.height}`;
+    $("exportProgress").textContent="PDF 생성 완료";
   }catch(e){
-    console.error(e);
-    alert("PDF 생성 중 오류가 났어.");
+    if(e?.code==="PREFLIGHT_BLOCKED"){
+      $("exportProgress").textContent="PDF 출력 차단 · 사전 점검 항목을 수정해줘.";
+      alert(e.message);
+    }else{
+      console.error(e);
+      alert("PDF 생성 중 오류가 났어.\n"+(e?.message||"브라우저 메모리 부족 가능성 있음"));
+    }
   }finally{
-    b.disabled=false;b.textContent="PDF 저장";
+    setExportBusy(false);
   }
 }
 
@@ -1213,7 +1512,7 @@ $("fontSelect").onchange=e=>{
 
 $("clearTextBtn").onclick=()=>{
   state.title="";state.sub="";state.date="";state.place="";
-  renderContent();renderUI();saveBrowserSoon();
+  renderContent();renderUI();checkLayout();saveBrowserSoon();
 };
 
 /* logos */
@@ -1248,26 +1547,26 @@ $("clearLogos").onclick=()=>{
 $("logoX").oninput=e=>{
   const x=state.logos[state.selectedLogo];
   if(x.locked)return;
-  x.x=Number(e.target.value);renderLogos();updateLogoControls();saveBrowserSoon();
+  x.x=Number(e.target.value);renderLogos();updateLogoControls();checkLayout();saveBrowserSoon();
 };
 $("logoY").oninput=e=>{
   const x=state.logos[state.selectedLogo];
   if(x.locked)return;
-  x.y=Number(e.target.value);renderLogos();updateLogoControls();saveBrowserSoon();
+  x.y=Number(e.target.value);renderLogos();updateLogoControls();checkLayout();saveBrowserSoon();
 };
 $("logoSize").oninput=e=>{
   const x=state.logos[state.selectedLogo];
   if(x.locked)return;
-  x.w=Number(e.target.value);renderLogos();updateLogoControls();saveBrowserSoon();
+  x.w=Number(e.target.value);renderLogos();updateLogoControls();checkLayout();saveBrowserSoon();
 };
 $("logoOpacity").oninput=e=>{
   const x=state.logos[state.selectedLogo];
   if(x.locked)return;
-  x.opacity=Number(e.target.value)/100;renderLogos();updateLogoControls();saveBrowserSoon();
+  x.opacity=Number(e.target.value)/100;renderLogos();updateLogoControls();checkLayout();saveBrowserSoon();
 };
 $("lockBtn").onclick=()=>{
   const x=state.logos[state.selectedLogo];
-  x.locked=!x.locked;renderLogos();updateLogoControls();saveBrowserSoon();
+  x.locked=!x.locked;renderLogos();updateLogoControls();checkLayout();saveBrowserSoon();
 };
 $("resetLogo").onclick=()=>{
   const i=state.selectedLogo;
@@ -1275,7 +1574,7 @@ $("resetLogo").onclick=()=>{
   if(x.locked)return;
   const base=logoDefaults()[i];
   state.logos[i]={...x,x:base.x,y:base.y,w:base.w,opacity:1};
-  renderLogos();updateLogoControls();saveBrowserSoon();
+  renderLogos();updateLogoControls();checkLayout();saveBrowserSoon();
 };
 
 logoObjs.forEach(el=>{
@@ -1306,14 +1605,19 @@ $("pdfBtn").onclick=exportPDF;
 $("workSaveBtn").onclick=makeWorkFile;
 $("workLoadBtn").onclick=()=>$("workFile").click();
 $("workFile").onchange=e=>loadWorkFile(e.target.files?.[0]);
-$("browserSaveBtn").onclick=browserSave;
+$("browserSaveBtn").onclick=()=>saveBrowserNow(true);
 $("resetAllBtn").onclick=()=>{
   if(!confirm("웰컴보드 작업을 전부 초기화할까?"))return;
-  localStorage.removeItem("welcomeBoardMakerV10");
+  localStorage.removeItem(STORAGE_KEY);
   state=freshState();
   for(let i=0;i<4;i++)$("logoFile"+i).value="";
   render();
 };
+
+$("mobileEditorBtn").onclick=()=>showMobilePanel("editor");
+$("mobilePreviewBtn").onclick=()=>showMobilePanel("preview");
+$("newWorkBtn").onclick=startNewWork;
+$("restorePreviousBtn").onclick=restorePreviousWork;
 
 /* feedback */
 $("feedbackMail").href=
@@ -1328,10 +1632,31 @@ $("copyMail").onclick=async()=>{
   }
 };
 
-window.addEventListener("resize",fit);
+function handleResize(){
+  if(window.innerWidth>760){
+    document.querySelector(".app").classList.remove("mobile-preview");
+    $("editorPanel").removeAttribute("aria-hidden");
+    $("previewPanel").removeAttribute("aria-hidden");
+  }else{
+    const preview=document.querySelector(".app").classList.contains("mobile-preview");
+    $("editorPanel").setAttribute("aria-hidden",preview?"true":"false");
+    $("previewPanel").setAttribute("aria-hidden",preview?"false":"true");
+  }
+  fit();
+  checkLayout();
+}
 
-loadBrowser();
+window.addEventListener("resize",handleResize);
+logoImgs.forEach(img=>img.addEventListener("load",checkLayout));
+
+const restored=loadBrowser();
 render();
+handleResize();
+if(restored){
+  let hasPrevious=false;
+  try{hasPrevious=!!localStorage.getItem(PREVIOUS_STORAGE_KEY)}catch(e){}
+  showRestoreNotice(`이전 작업을 자동 복원했어 · ${formatSavedAt(restoredSavedAt)}`,hasPrevious);
+}
 })();
 </script>
 </body>
