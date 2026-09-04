@@ -100,6 +100,11 @@ input:focus,select:focus,textarea:focus{
 }
 .template-name{display:block;font-size:10.5px;padding:1px 2px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .template-btn{position:relative}
+.template-preset-chip{
+  position:absolute;right:10px;top:10px;z-index:2;
+  background:#0E4A84;color:#fff;border-radius:999px;
+  padding:2px 6px;font-size:8.5px;font-weight:800
+}
 .template-no{
   position:absolute;left:10px;top:10px;z-index:2;
   background:rgba(20,20,20,.72);color:#fff;border-radius:999px;
@@ -116,6 +121,12 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
   min-height:var(--touch);border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 6px;
   color:#465664;font-size:11px;font-weight:700
 }
+.preset-action{
+  margin-top:9px;padding:10px;border:1px solid #c9deec;border-radius:10px;
+  background:linear-gradient(145deg,#f7fbfe 0%,#eef6fb 100%)
+}
+.preset-action button{width:100%;min-height:var(--touch)}
+.preset-action p{margin:6px 2px 0;font-size:10.5px;line-height:1.45;color:#60717e}
 .built-logo-box{
   border:1px solid #d7e2eb;background:#f4f8fb;border-radius:9px;padding:9px 10px;margin-bottom:10px
 }
@@ -196,19 +207,31 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
   pointer-events:auto;cursor:move;user-select:none;touch-action:none
 }
 .main-title{
-  left:var(--title-x,50%);top:var(--title-y,47%);width:88%;
-  font-size:var(--title-size,66px);font-weight:850;line-height:1.15;letter-spacing:-.045em
+  left:var(--title-x,50%);top:var(--title-y,47%);width:var(--title-w,88%);
+  font-size:var(--title-size,66px);font-weight:var(--title-weight,850);
+  line-height:var(--title-line-height,1.15);letter-spacing:var(--title-letter-spacing,-.045em)
 }
 .sub{
-  left:var(--sub-x,50%);top:var(--sub-y,60%);width:80%;
-  font-size:var(--sub-size,25px);font-weight:550;line-height:1.35
+  left:var(--sub-x,50%);top:var(--sub-y,60%);width:var(--sub-w,80%);
+  font-size:var(--sub-size,25px);font-weight:var(--sub-weight,550);
+  line-height:var(--sub-line-height,1.35);letter-spacing:var(--sub-letter-spacing,0em)
 }
 .info{
-  left:var(--info-x,50%);top:var(--info-y,74%);width:76%;
-  font-size:var(--info-size,30px);font-weight:500;line-height:1.55;letter-spacing:-.02em
+  left:var(--info-x,50%);top:var(--info-y,74%);width:var(--info-w,76%);
+  font-size:var(--info-size,30px);font-weight:var(--info-weight,500);
+  line-height:var(--info-line-height,1.55);letter-spacing:var(--info-letter-spacing,-.02em)
 }
 .info-line{width:max-content;max-width:100%;margin:0 auto;white-space:pre-wrap}
 .info-line:empty{display:none}
+.info-label{display:inline}
+.page[data-info-style="pill"] .info-line{
+  display:grid;grid-template-columns:82px minmax(0,1fr);align-items:center;
+  gap:22px;margin-bottom:12px;text-align:left
+}
+.page[data-info-style="pill"] .info-label{
+  display:inline-grid;place-items:center;min-height:38px;padding:4px 13px;
+  border-radius:999px;background:#064b80;color:#fff;font-weight:850;line-height:1
+}
 .logo-obj{
   position:absolute;left:50%;top:20%;width:18%;transform:translate(-50%,-50%);
   z-index:10;touch-action:none;user-select:none;cursor:grab
@@ -310,8 +333,12 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
   <section class="section">
     <h2>1. 웰컴보드 디자인</h2>
     <div class="template-grid" id="templateGrid"></div>
+    <div class="preset-action">
+      <button type="button" class="btn primary" id="applyTemplatePreset">선택 시안 프리셋 적용</button>
+      <p id="presetHelp">프리셋이 있는 시안을 선택하면 예시 문구와 자간·행간·배치를 한 번에 적용할 수 있어.</p>
+    </div>
     <div class="note" style="margin-top:9px">
-      총 8종. 기존 브라운·블랙 2종 + 신규 골드/다크 6종을 지원해.
+      총 11종. 디자이너 제공 Black·Blue·White 3종과 기존 8종을 지원해.
       각 배경은 <strong>templates/</strong> 폴더에 아래 파일명 그대로 넣으면 돼.
     </div>
   </section>
@@ -324,7 +351,7 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
     </div>
     <div class="field">
       <label for="subInput"><strong>보조 문구</strong><span>선택</span></label>
-      <input id="subInput" type="text" placeholder="예: 방문을 환영합니다">
+      <textarea id="subInput" rows="2" placeholder="예: 방문 행사명 또는 보조 문구"></textarea>
     </div>
     <div class="field">
       <label for="dateInput"><strong>일시</strong></label>
@@ -370,7 +397,7 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
         <div class="range"><label for="titleX">행사명 X</label><input id="titleX" type="range" min="10" max="90" value="50"><output id="titleXO" for="titleX">50%</output></div>
         <div class="range"><label for="titleY">행사명 Y</label><input id="titleY" type="range" min="20" max="68" value="47"><output id="titleYO" for="titleY">47%</output></div>
         <div class="range"><label for="subX">보조문구 X</label><input id="subX" type="range" min="10" max="90" value="50"><output id="subXO" for="subX">50%</output></div>
-        <div class="range"><label for="subY">보조문구 Y</label><input id="subY" type="range" min="30" max="78" value="60"><output id="subYO" for="subY">60%</output></div>
+        <div class="range"><label for="subY">보조문구 Y</label><input id="subY" type="range" min="10" max="78" value="60"><output id="subYO" for="subY">60%</output></div>
         <div class="range"><label for="infoX">일시·장소 X</label><input id="infoX" type="range" min="10" max="90" value="50"><output id="infoXO" for="infoX">50%</output></div>
         <div class="range"><label for="infoY">일시·장소 Y</label><input id="infoY" type="range" min="45" max="90" value="74"><output id="infoYO" for="infoY">74%</output></div>
       </div>
@@ -389,6 +416,7 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
         <label for="builtInLogo"><strong>한양대 기본 로고 빠른 선택</strong><span>기관 로고 1에 삽입</span></label>
         <select id="builtInLogo">
           <option value="none">직접 업로드 / 사용 안 함</option>
+          <option value="hyu_erica">한양대학교 ERICA 가로형 · 컬러</option>
           <option value="hyu_white">한양대학교 가로형 · 흰색</option>
           <option value="hyu_erica_white" selected>한양대학교 ERICA 가로형 · 흰색</option>
           <option value="hyu_round_white">한양대학교 원형 · 흰색</option>
@@ -543,6 +571,8 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
           <span class="patch-current" id="patchVersion"></span>
         </div>
         <ul>
+          <li>디자이너 제공 Black·Blue·White 시안 3종과 타이포그래피 프리셋 버튼</li>
+          <li>시안 기준 자간·행간·글자 위계·정보 라벨과 로고 위치를 한 번에 적용</li>
           <li>모바일·태블릿에서 편집/미리보기를 즉시 전환하는 현장 대응 UI</li>
           <li>잘림·안전 여백·요소 충돌을 확인하고 심각한 문제는 출력 전에 차단</li>
           <li>고급 위치·크기 설정을 접어 핵심 입력과 출력 흐름을 간결하게 정리</li>
@@ -561,14 +591,28 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
 "use strict";
 
 const $=id=>document.getElementById(id);
-const APP_VERSION="1.1.0";
-const RELEASE_NAME="FIELD STABLE";
-const RELEASE_DATE="2026.09.03";
+const APP_VERSION="1.2.0";
+const RELEASE_NAME="DESIGNER PRESETS";
+const RELEASE_DATE="2026.09.04";
 const STORAGE_KEY="welcomeBoardMakerV10";
 const PREVIOUS_STORAGE_KEY="welcomeBoardMakerV10Previous";
 const FEEDBACK_EMAIL="keun0810@hanyang.ac.kr";
 
 const TEMPLATES=[
+  {id:"designer_black",name:"디자이너 블랙",file:"templates/designer_welcome_black.png",thumb:"templates/thumbs/designer_welcome_black.jpg",preset:{
+    text:{title:"김성함 직함님 및 외빈분들의\nERICA 방문을 환영합니다.",sub:"한양대학교 ERICA-회사명\n가나사업 ABCDE 업무협약식",date:"2026. 09. 03. (목) 11:30",place:"본관 4층 409호 발전협력팀"},
+    style:{font:"Pretendard",titleSize:70,subSize:34,infoSize:29,titleX:50,titleY:50,subX:50,subY:21,infoX:50,infoY:73,titleWidth:76,subWidth:72,infoWidth:76,titleLineHeight:1.16,subLineHeight:1.22,infoLineHeight:1.62,titleLetterSpacing:-.05,subLetterSpacing:-.035,infoLetterSpacing:-.022,titleWeight:820,subWeight:700,infoWeight:420,titleColor:"#FFFFFF",subColor:"#FFFFFF",infoColor:"#D8D8D8",infoStyle:"plain"}
+  }},
+  {id:"designer_blue",name:"디자이너 블루",file:"templates/designer_welcome_blue.png",thumb:"templates/thumbs/designer_welcome_blue.jpg",preset:{
+    text:{title:"김성함 직함님 및 외빈분들의\nERICA 방문을 환영합니다.",sub:"한양대학교 ERICA-회사명\n가나사업 ABCDE 업무협약식",date:"2026. 09. 03. (목) 11:30",place:"본관 4층 409호 발전협력팀"},
+    style:{font:"Pretendard",titleSize:70,subSize:34,infoSize:29,titleX:50,titleY:49,subX:50,subY:22,infoX:50,infoY:72,titleWidth:76,subWidth:72,infoWidth:76,titleLineHeight:1.16,subLineHeight:1.2,infoLineHeight:1.58,titleLetterSpacing:-.05,subLetterSpacing:-.035,infoLetterSpacing:-.022,titleWeight:820,subWeight:700,infoWeight:520,titleColor:"#FFFFFF",subColor:"#FFFFFF",infoColor:"#FFFFFF",infoStyle:"pill"},
+    logo:{key:"hyu_erica_white",x:50,y:8,w:17}
+  }},
+  {id:"designer_white",name:"디자이너 화이트",file:"templates/designer_welcome_white.png",thumb:"templates/thumbs/designer_welcome_white.jpg",preset:{
+    text:{title:"김성함 직함님 및 외빈분들의\nERICA 방문을 환영합니다.",sub:"한양대학교 ERICA-회사명\n가나사업 ABCDE 업무협약식",date:"2026. 09. 03. (목) 11:30",place:"본관 4층 409호 발전협력팀"},
+    style:{font:"Pretendard",titleSize:70,subSize:34,infoSize:29,titleX:50,titleY:49,subX:50,subY:22,infoX:50,infoY:72,titleWidth:76,subWidth:72,infoWidth:76,titleLineHeight:1.16,subLineHeight:1.2,infoLineHeight:1.58,titleLetterSpacing:-.05,subLetterSpacing:-.035,infoLetterSpacing:-.022,titleWeight:820,subWeight:700,infoWeight:520,titleColor:"#171717",subColor:"#171717",infoColor:"#242424",infoStyle:"pill"},
+    logo:{key:"hyu_erica",x:50,y:8,w:17}
+  }},
   {id:"brown",name:"브라운 클래식",file:"templates/template_13.png",thumb:"templates/thumbs/template_13.jpg"},
   {id:"black",name:"블랙 클래식",file:"templates/template_14.png",thumb:"templates/thumbs/template_14.jpg"},
   {id:"classic_gold",name:"클래식 골드 프레임",file:"templates/welcome_template_03_classic_gold_frame.png",thumb:"templates/thumbs/welcome_template_03_classic_gold_frame.jpg"},
@@ -580,6 +624,7 @@ const TEMPLATES=[
 ];
 
 const BUILT_IN_LOGOS={
+  hyu_erica:"logos/hyu_erica.png",
   hyu_white:"logos/hyu_white.png",
   hyu_erica_white:"logos/hyu_erica_white.png",
   hyu_round_white:"logos/hyu_round_white.png",
@@ -618,6 +663,23 @@ const freshState=()=>({
   subY:60,
   infoX:50,
   infoY:74,
+
+  titleWidth:88,
+  subWidth:80,
+  infoWidth:76,
+  titleLineHeight:1.15,
+  subLineHeight:1.35,
+  infoLineHeight:1.55,
+  titleLetterSpacing:-.045,
+  subLetterSpacing:0,
+  infoLetterSpacing:-.02,
+  titleWeight:850,
+  subWeight:550,
+  infoWeight:500,
+  titleColor:"#FFFFFF",
+  subColor:"#FFFFFF",
+  infoColor:"#FFFFFF",
+  infoStyle:"plain",
 
   resolution:7680,
   outputName:"ERICA 본관 1층 웰컴보드",
@@ -696,12 +758,24 @@ function renderContent(){
 
   $("previewTitle").textContent=state.title;
   $("previewSub").textContent=state.sub;
-  $("previewDate").textContent=state.date?`일시 : ${state.date}`:"";
-  $("previewPlace").textContent=state.place?`장소 : ${state.place}`:"";
+  renderInfoLine($("previewDate"),"일시",state.date);
+  renderInfoLine($("previewPlace"),"장소",state.place);
 
   page.style.setProperty("--title-size",state.titleSize+"px");
   page.style.setProperty("--sub-size",state.subSize+"px");
   page.style.setProperty("--info-size",state.infoSize+"px");
+  page.style.setProperty("--title-w",state.titleWidth+"%");
+  page.style.setProperty("--sub-w",state.subWidth+"%");
+  page.style.setProperty("--info-w",state.infoWidth+"%");
+  page.style.setProperty("--title-line-height",state.titleLineHeight);
+  page.style.setProperty("--sub-line-height",state.subLineHeight);
+  page.style.setProperty("--info-line-height",state.infoLineHeight);
+  page.style.setProperty("--title-letter-spacing",state.titleLetterSpacing+"em");
+  page.style.setProperty("--sub-letter-spacing",state.subLetterSpacing+"em");
+  page.style.setProperty("--info-letter-spacing",state.infoLetterSpacing+"em");
+  page.style.setProperty("--title-weight",state.titleWeight);
+  page.style.setProperty("--sub-weight",state.subWeight);
+  page.style.setProperty("--info-weight",state.infoWeight);
 
   page.style.setProperty("--title-x",state.titleX+"%");
   page.style.setProperty("--title-y",state.titleY+"%");
@@ -709,6 +783,22 @@ function renderContent(){
   page.style.setProperty("--sub-y",state.subY+"%");
   page.style.setProperty("--info-x",state.infoX+"%");
   page.style.setProperty("--info-y",state.infoY+"%");
+  $("previewTitle").style.color=state.titleColor;
+  $("previewSub").style.color=state.subColor;
+  $("previewInfo").style.color=state.infoColor;
+  page.dataset.infoStyle=state.infoStyle||"plain";
+}
+
+function renderInfoLine(el,label,value){
+  el.replaceChildren();
+  if(!value)return;
+  const labelEl=document.createElement("span");
+  labelEl.className="info-label";
+  labelEl.textContent=(state.infoStyle||"plain")==="pill"?label:`${label} :`;
+  const valueEl=document.createElement("span");
+  valueEl.className="info-value";
+  valueEl.textContent=value;
+  el.append(labelEl,valueEl);
 }
 
 function renderLogos(){
@@ -761,6 +851,12 @@ function buildTemplateGrid(){
     b.appendChild(no);
     b.appendChild(thumb);
     b.appendChild(name);
+    if(item.preset){
+      const chip=document.createElement("span");
+      chip.className="template-preset-chip";
+      chip.textContent="프리셋";
+      b.appendChild(chip);
+    }
 
     b.addEventListener("click",()=>{
       state.template=item.id;
@@ -835,6 +931,11 @@ function renderUI(){
   $("resolution").value=String(state.resolution);
   $("outputName").value=state.outputName;
   $("builtInLogo").value=state.builtInLogo||"hyu_erica_white";
+  const template=currentTemplate();
+  $("applyTemplatePreset").disabled=!template.preset;
+  $("presetHelp").textContent=template.preset
+    ?`${template.name}의 예시 문구·자간·행간·위치·색상을 적용해.`
+    :"이 시안은 배경만 제공해. 프리셋 배지가 있는 시안을 선택해줘.";
   const targetH=Math.round(state.resolution*9/16);
   $("resolutionBadge").textContent=
     state.resolution===7680?"8K PNG 권장":
@@ -1091,7 +1192,7 @@ function selectLogo(i){
   saveBrowserSoon();
 }
 
-function loadBuiltInLogoToSlot1(key){
+function loadBuiltInLogoToSlot1(key,placement=null){
   const path=BUILT_IN_LOGOS[key];
   if(!path){
     alert("기본 로고를 선택해줘.");
@@ -1110,10 +1211,10 @@ function loadBuiltInLogoToSlot1(key){
           ...state.logos[0],
           data:String(reader.result||""),
           name:path.split("/").pop(),
-          x:38,y:20,w:19,opacity:1,locked:false
+          x:placement?.x??38,y:placement?.y??20,w:placement?.w??19,opacity:1,locked:false
         };
         state.selectedLogo=0;
-        autoArrange(false);
+        if(!placement)autoArrange(false);
         renderLogos();
         updateLogoControls();
         checkLayout();
@@ -1210,6 +1311,19 @@ function loadExample(){
   saveBrowserSoon();
 }
 
+function applySelectedTemplatePreset(){
+  const template=currentTemplate();
+  const preset=template.preset;
+  if(!preset)return;
+  Object.assign(state,preset.text,preset.style);
+  state.logos=logoDefaults();
+  state.selectedLogo=0;
+  state.builtInLogo=preset.logo?.key||"none";
+  render();
+  if(preset.logo)loadBuiltInLogoToSlot1(preset.logo.key,preset.logo);
+  showRestoreNotice(`${template.name} 프리셋 적용됨 · 문구와 세부 값은 계속 수정할 수 있어.`,false);
+}
+
 function bindText(id,key){
   $(id).addEventListener("input",e=>{
     state[key]=e.target.value;
@@ -1281,7 +1395,7 @@ function pointerMove(e){
     state.titleY=clamp(y,20,68);
   }else if(key==="sub"){
     state.subX=clamp(x,10,90);
-    state.subY=clamp(y,30,78);
+    state.subY=clamp(y,10,78);
   }else if(key==="info"){
     state.infoX=clamp(x,10,90);
     state.infoY=clamp(y,45,90);
@@ -1502,6 +1616,7 @@ bindRange("infoX","infoX","infoXO","%");
 bindRange("infoY","infoY","infoYO","%");
 
 $("exampleBtn").onclick=loadExample;
+$("applyTemplatePreset").onclick=applySelectedTemplatePreset;
 
 $("fontSelect").onchange=e=>{
   state.font=e.target.value;
