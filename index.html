@@ -161,7 +161,7 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
 .primary{background:var(--blue);color:#fff}
 .secondary{background:#e9eef2;color:#293845}
 .danger{background:#fff1f1;color:#a43434;border:1px solid #ffd2d2}
-.feedback-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.feedback-actions{display:grid;grid-template-columns:1fr;gap:7px}
 .feedback-actions a,.feedback-actions button{
   min-height:var(--touch);display:flex;align-items:center;justify-content:center;
   border:1px solid var(--line);background:#fff;color:#314555;border-radius:8px;
@@ -316,6 +316,10 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
   .logo-slot{grid-template-columns:1fr}
   .logo-slot .slot-actions{margin-top:4px}
 }
+
+.mach-feedback .feedback-actions a{min-height:44px;text-align:center}
+.mach-feedback .feedback-actions a:focus-visible{outline:3px solid #165dcb;outline-offset:3px}
+@media print{.mach-feedback{display:none!important}}
 </style>
 <style id="mach-home-navigation-style">
 /* Screen navigation only. Keep outside all generated artwork. */
@@ -542,11 +546,11 @@ input[type=range]{width:100%;min-height:var(--touch);accent-color:var(--blue)}
     <input class="hidden-file" id="workFile" type="file" aria-label="작업파일 선택" accept=".json,.welcome.json,application/json">
   </section>
 
-  <section class="section">
+  <section class="section mach-feedback" data-html2canvas-ignore="true">
     <h2>5. 피드백</h2>
+    <p class="note">불편신고, 수정·기능요청, 응원을 비공개로 보내 주세요.</p>
     <div class="feedback-actions">
-      <a id="feedbackMail" href="#">피드백 메일 보내기</a>
-      <button type="button" id="copyMail">메일 주소 복사</button>
+      <a data-mach-feedback="05" href="https://script.google.com/macros/s/AKfycby2ShSY4ruQr9Ku-QlljB05Ygk3ygDRtX-hXWO0hfUmEULl-jK9Z7mqh_k2m9GSV70v/exec?tool=05" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">의견 보내기 (새 창)</a>
     </div>
   </section>
 </aside>
@@ -618,7 +622,6 @@ const RELEASE_NAME="DESIGNER PRESETS";
 const RELEASE_DATE="2026.09.04";
 const STORAGE_KEY="welcomeBoardMakerV10";
 const PREVIOUS_STORAGE_KEY="welcomeBoardMakerV10Previous";
-const FEEDBACK_EMAIL="keun0810@hanyang.ac.kr";
 
 const TEMPLATES=[
   {id:"designer_black",name:"디자이너 블랙",file:"templates/designer_welcome_black.png",thumb:"templates/thumbs/designer_welcome_black.jpg",preset:{
@@ -1755,19 +1758,6 @@ $("mobileEditorBtn").onclick=()=>showMobilePanel("editor");
 $("mobilePreviewBtn").onclick=()=>showMobilePanel("preview");
 $("newWorkBtn").onclick=startNewWork;
 $("restorePreviousBtn").onclick=restorePreviousWork;
-
-/* feedback */
-$("feedbackMail").href=
-  `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent("[웰컴보드 제작기 피드백]")}`+
-  `&body=${encodeURIComponent("발생한 문제 또는 개선 요청:\\n\\n사용 브라우저:\\n기타:\\n")}`;
-$("copyMail").onclick=async()=>{
-  try{
-    await navigator.clipboard.writeText(FEEDBACK_EMAIL);
-    alert("메일 주소를 복사했어.");
-  }catch(e){
-    prompt("아래 주소를 복사해줘.",FEEDBACK_EMAIL);
-  }
-};
 
 function handleResize(){
   if(window.innerWidth>760){
